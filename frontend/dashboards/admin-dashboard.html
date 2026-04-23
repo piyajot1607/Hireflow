@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - HireFlow</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h4 class="brand-name">
+                    <i class="fas fa-crown"></i> HireFlow
+                </h4>
+                <button class="btn-close-sidebar d-lg-none" id="closeSidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#dashboard" data-page="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#users" data-page="users">
+                        <i class="fas fa-users"></i>
+                        <span>Users Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#recruiters" data-page="recruiters">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Recruiters</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#candidates" data-page="candidates">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Candidates</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#analytics" data-page="analytics">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Analytics</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#jobs" data-page="jobs">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Job Postings</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#payments" data-page="payments">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Payments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#settings" data-page="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#logs" data-page="logs">
+                        <i class="fas fa-file-lines"></i>
+                        <span>System Logs</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <hr>
+                <button class="btn btn-outline-danger w-100" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation Bar -->
+            <nav class="topbar">
+                <div class="topbar-left">
+                    <button class="btn-toggle-sidebar d-lg-none" id="toggleSidebar">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h5 class="mb-0" id="pageTitle">Dashboard</h5>
+                </div>
+
+                <div class="topbar-right">
+                    <button class="btn btn-icon" id="notificationBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">8</span>
+                    </button>
+                    
+                    <div class="dropdown">
+                        <button class="btn btn-icon dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
+                            <img src="https://via.placeholder.com/32" alt="Profile" class="profile-avatar">
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#profile">
+                                <i class="fas fa-user me-2"></i> My Profile
+                            </a></li>
+                            <li><a class="dropdown-item" href="#settings">
+                                <i class="fas fa-cog me-2"></i> Settings
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#logout">
+                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Dashboard Page -->
+                <div id="dashboard" class="page-section active">
+                    <div class="page-header">
+                        <div>
+                            <h1>Admin Dashboard</h1>
+                            <p class="text-muted">Platform overview and system health</p>
+                        </div>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-refresh"></i> Refresh
+                        </button>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="row stats-row">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="stat-card">
+                                <div class="stat-icon applications">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h6>Total Users</h6>
+                                    <h3>1,248</h3>
+                                    <small>Active Users</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="stat-card">
+                                <div class="stat-icon interviews">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h6>Total Recruiters</h6>
+                                    <h3>87</h3>
+                                    <small>Registered</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="stat-card">
+                                <div class="stat-icon saved">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h6>Total Candidates</h6>
+                                    <h3>1,161</h3>
+                                    <small>Registered</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="stat-card">
+                                <div class="stat-icon views">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h6>Revenue</h6>
+                                    <h3>$24.5K</h3>
+                                    <small>This Month</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Health & Recent Activity -->
+                    <div class="row mt-4">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>System Health</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div style="padding: 20px 0;">
+                                        <div class="mb-4">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span><i class="fas fa-server"></i> Server Health</span>
+                                                <strong>Excellent</strong>
+                                            </div>
+                                            <div class="progress" style="height: 25px;">
+                                                <div class="progress-bar bg-success" style="width: 95%;"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span><i class="fas fa-database"></i> Database</span>
+                                                <strong>Excellent</strong>
+                                            </div>
+                                            <div class="progress" style="height: 25px;">
+                                                <div class="progress-bar bg-success" style="width: 88%;"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span><i class="fas fa-memory"></i> Memory Usage</span>
+                                                <strong>65%</strong>
+                                            </div>
+                                            <div class="progress" style="height: 25px;">
+                                                <div class="progress-bar bg-warning" style="width: 65%;"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span><i class="fas fa-hdd"></i> Storage</span>
+                                                <strong>72%</strong>
+                                            </div>
+                                            <div class="progress" style="height: 25px;">
+                                                <div class="progress-bar bg-warning" style="width: 72%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Recent Activity</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="activity-item">
+                                        <div class="activity-icon success">
+                                            <i class="fas fa-user-plus"></i>
+                                        </div>
+                                        <div class="activity-content">
+                                            <h6>New candidate signup</h6>
+                                            <small>5 minutes ago</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="activity-item">
+                                        <div class="activity-icon primary">
+                                            <i class="fas fa-file-alt"></i>
+                                        </div>
+                                        <div class="activity-content">
+                                            <h6>Job posting created</h6>
+                                            <small>23 minutes ago</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="activity-item">
+                                        <div class="activity-icon info">
+                                            <i class="fas fa-credit-card"></i>
+                                        </div>
+                                        <div class="activity-content">
+                                            <h6>Payment received</h6>
+                                            <small>1 hour ago</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="activity-item">
+                                        <div class="activity-icon warning">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <div class="activity-content">
+                                            <h6>High memory usage</h6>
+                                            <small>2 hours ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Management Page -->
+                <div id="users" class="page-section">
+                    <div class="page-header">
+                        <h1>Users Management</h1>
+                        <p class="text-muted">Manage all platform users</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5>All Users</h5>
+                            <input type="text" class="form-control w-auto" placeholder="Search users...">
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Email</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                            <th>Joined</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>John Doe</strong></td>
+                                            <td>john@example.com</td>
+                                            <td><span class="badge bg-info">Candidate</span></td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>Jan 15, 2026</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary">Edit</button>
+                                                <button class="btn btn-sm btn-outline-danger">Suspend</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Sarah Johnson</strong></td>
+                                            <td>sarah@example.com</td>
+                                            <td><span class="badge bg-warning">Recruiter</span></td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>Dec 20, 2025</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary">Edit</button>
+                                                <button class="btn btn-sm btn-outline-danger">Suspend</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Mike Wilson</strong></td>
+                                            <td>mike@example.com</td>
+                                            <td><span class="badge bg-info">Candidate</span></td>
+                                            <td><span class="badge bg-secondary">Inactive</span></td>
+                                            <td>Nov 10, 2025</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary">Edit</button>
+                                                <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recruiters Page -->
+                <div id="recruiters" class="page-section">
+                    <div class="page-header">
+                        <h1>Recruiters</h1>
+                        <p class="text-muted">Manage recruiter accounts and subscriptions</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Recruiter Accounts</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="recruiter-card">
+                                        <h6>Tech Corp Inc.</h6>
+                                        <p>Sarah Johnson</p>
+                                        <div>
+                                            <span class="badge bg-success mb-2">Active</span>
+                                            <span class="badge bg-info mb-2">Premium Plan</span>
+                                        </div>
+                                        <small class="text-muted">Joined: Jan 15, 2026</small><br>
+                                        <small class="text-muted">Posted: 5 jobs | Hired: 2 candidates</small>
+                                        <div class="mt-2">
+                                            <button class="btn btn-sm btn-outline-primary">Manage</button>
+                                            <button class="btn btn-sm btn-outline-danger">Suspend</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <div class="recruiter-card">
+                                        <h6>StartUp Solutions</h6>
+                                        <p>Emily White</p>
+                                        <div>
+                                            <span class="badge bg-success mb-2">Active</span>
+                                            <span class="badge bg-secondary mb-2">Basic Plan</span>
+                                        </div>
+                                        <small class="text-muted">Joined: Dec 10, 2025</small><br>
+                                        <small class="text-muted">Posted: 3 jobs | Hired: 1 candidate</small>
+                                        <div class="mt-2">
+                                            <button class="btn btn-sm btn-outline-primary">Manage</button>
+                                            <button class="btn btn-sm btn-outline-danger">Suspend</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Candidates Page -->
+                <div id="candidates" class="page-section">
+                    <div class="page-header">
+                        <h1>Candidates</h1>
+                        <p class="text-muted">Manage candidate accounts</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <h5>Candidate Profiles</h5>
+                            <select class="form-control w-auto">
+                                <option>All Statuses</option>
+                                <option>Active</option>
+                                <option>Inactive</option>
+                                <option>Banned</option>
+                            </select>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Experience</th>
+                                            <th>Applications</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>John Doe</strong></td>
+                                            <td>john@example.com</td>
+                                            <td>5 years</td>
+                                            <td>12</td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-info">View</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Jane Smith</strong></td>
+                                            <td>jane@example.com</td>
+                                            <td>3 years</td>
+                                            <td>8</td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-info">View</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Page -->
+                <div id="analytics" class="page-section">
+                    <div class="page-header">
+                        <h1>Platform Analytics</h1>
+                        <p class="text-muted">Detailed insights and metrics</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>User Growth</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="growthChart" height="200"></canvas>
+                                    <small class="text-muted">Monthly user registrations</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Revenue Trend</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="revenueChart" height="200"></canvas>
+                                    <small class="text-muted">Monthly recurring revenue</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5>Key Metrics</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="metric-box">
+                                        <h6>Avg. Users/Day</h6>
+                                        <h3>456</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="metric-box">
+                                        <h6>Job Postings/Day</h6>
+                                        <h3>23</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="metric-box">
+                                        <h6>Applications/Day</h6>
+                                        <h3>156</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="metric-box">
+                                        <h6>Conversion Rate</h6>
+                                        <h3>3.2%</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jobs Page -->
+                <div id="jobs" class="page-section">
+                    <div class="page-header">
+                        <h1>Job Postings</h1>
+                        <p class="text-muted">Monitor all job postings on the platform</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>All Job Postings</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Job Title</th>
+                                            <th>Company</th>
+                                            <th>Applications</th>
+                                            <th>Status</th>
+                                            <th>Posted Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Senior Frontend Developer</strong></td>
+                                            <td>Tech Corp Inc.</td>
+                                            <td>12</td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>Apr 1, 2026</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-info">View</button>
+                                                <button class="btn btn-sm btn-outline-danger">Remove</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Full Stack Developer</strong></td>
+                                            <td>StartUp Solutions</td>
+                                            <td>8</td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>Mar 28, 2026</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-info">View</button>
+                                                <button class="btn btn-sm btn-outline-danger">Remove</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payments Page -->
+                <div id="payments" class="page-section">
+                    <div class="page-header">
+                        <h1>Payments & Billing</h1>
+                        <p class="text-muted">Manage transactions and subscriptions</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Recent Transactions</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>User/Company</th>
+                                                    <th>Amount</th>
+                                                    <th>Type</th>
+                                                    <th>Status</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Tech Corp Inc.</td>
+                                                    <td>$99.99</td>
+                                                    <td>Premium Plan</td>
+                                                    <td><span class="badge bg-success">Completed</span></td>
+                                                    <td>Apr 5, 2026</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>StartUp Solutions</td>
+                                                    <td>$49.99</td>
+                                                    <td>Basic Plan</td>
+                                                    <td><span class="badge bg-success">Completed</span></td>
+                                                    <td>Apr 1, 2026</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Revenue Summary</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="metric-box">
+                                        <h6>This Month</h6>
+                                        <h3>$24.5K</h3>
+                                    </div>
+                                    <hr>
+                                    <div class="metric-box">
+                                        <h6>Active Subscriptions</h6>
+                                        <h3>87</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Page -->
+                <div id="settings" class="page-section">
+                    <div class="page-header">
+                        <h1>System Settings</h1>
+                        <p class="text-muted">Configure platform settings</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>General Settings</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label class="form-label">Platform Name</label>
+                                            <input type="text" class="form-control" value="HireFlow">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Support Email</label>
+                                            <input type="email" class="form-control" value="support@hireflow.com">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Max File Upload Size (MB)</label>
+                                            <input type="number" class="form-control" value="5">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-checkbox">
+                                                <input type="checkbox" checked> Enable Email Notifications
+                                            </label>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-checkbox">
+                                                <input type="checkbox" checked> Enable SMS Notifications
+                                            </label>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Backup & Maintenance</h5>
+                                </div>
+                                <div class="card-body">
+                                    <button class="btn btn-outline-primary w-100 mb-2">
+                                        <i class="fas fa-download"></i> Backup Database
+                                    </button>
+                                    <button class="btn btn-outline-warning w-100 mb-2">
+                                        <i class="fas fa-tools"></i> Clear Cache
+                                    </button>
+                                    <button class="btn btn-outline-danger w-100">
+                                        <i class="fas fa-exclamation-triangle"></i> Maintenance Mode
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Logs Page -->
+                <div id="logs" class="page-section">
+                    <div class="page-header">
+                        <h1>System Logs</h1>
+                        <p class="text-muted">View and monitor system activity</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <h5>Activity Logs</h5>
+                            <select class="form-control w-auto">
+                                <option>All Logs</option>
+                                <option>Errors</option>
+                                <option>Warnings</option>
+                                <option>Info</option>
+                            </select>
+                        </div>
+                        <div class="card-body">
+                            <div class="log-list" style="max-height: 500px; overflow-y: auto; font-family: monospace;">
+                                <div class="log-item">
+                                    <span class="badge bg-success">INFO</span>
+                                    <span class="log-time">2026-04-06 14:32:15</span>
+                                    <span>User 'candidate@example.com' logged in successfully</span>
+                                </div>
+
+                                <div class="log-item">
+                                    <span class="badge bg-info">DEBUG</span>
+                                    <span class="log-time">2026-04-06 14:25:42</span>
+                                    <span>Database query executed: SELECT * FROM users</span>
+                                </div>
+
+                                <div class="log-item">
+                                    <span class="badge bg-warning">WARNING</span>
+                                    <span class="log-time">2026-04-06 14:18:30</span>
+                                    <span>High memory usage detected: 72% of available memory</span>
+                                </div>
+
+                                <div class="log-item">
+                                    <span class="badge bg-success">INFO</span>
+                                    <span class="log-time">2026-04-06 14:10:15</span>
+                                    <span>Job posting created by recruiter: Tech Corp Inc.</span>
+                                </div>
+
+                                <div class="log-item">
+                                    <span class="badge bg-success">INFO</span>
+                                    <span class="log-time">2026-04-06 14:05:22</span>
+                                    <span>Payment processed: $99.99 from Tech Corp Inc.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <!-- Dashboard JS -->
+    <script src="../js/dashboard.js"></script>
+    <script>
+        // Initialize charts
+        if (document.getElementById('growthChart')) {
+            new Chart('growthChart', {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'User Registrations',
+                        data: [120, 180, 250, 340, 420, 510],
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        if (document.getElementById('revenueChart')) {
+            new Chart('revenueChart', {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: [8000, 12000, 15000, 18000, 21000, 24500],
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                        borderColor: '#667eea',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

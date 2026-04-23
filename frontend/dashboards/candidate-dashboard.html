@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Dashboard - HireFlow</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+    
+    <style>
+        /* Read-only field styling */
+        input[readonly],
+        textarea[readonly],
+        select[readonly] {
+            background-color: #e9ecef !important;
+            cursor: not-allowed !important;
+        }
+        
+        input[readonly]::placeholder,
+        textarea[readonly]::placeholder {
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h4 class="brand-name">
+                    <i class="fas fa-briefcase"></i> HireFlow
+                </h4>
+                <button class="btn-close-sidebar d-lg-none" id="closeSidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#dashboard" data-page="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#jobs" data-page="jobs">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Explore Jobs</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#applications" data-page="applications">
+                        <i class="fas fa-file-alt"></i>
+                        <span>My Applications</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#saved" data-page="saved">
+                        <i class="fas fa-heart"></i>
+                        <span>Saved Jobs</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#profile" data-page="profile">
+                        <i class="fas fa-user"></i>
+                        <span>My Profile</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#messages" data-page="messages">
+                        <i class="fas fa-envelope"></i>
+                        <span>Messages</span>
+                        <span class="badge bg-danger ms-2">3</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <hr>
+                <button class="btn btn-outline-danger w-100" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation Bar -->
+            <nav class="topbar">
+                <div class="topbar-left">
+                    <button class="btn-toggle-sidebar d-lg-none" id="toggleSidebar">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h5 class="mb-0" id="pageTitle">Dashboard</h5>
+                </div>
+
+                <div class="topbar-right">
+                    <button class="btn btn-icon" id="notificationBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">5</span>
+                    </button>
+                    
+                    <div class="dropdown">
+                        <button class="btn btn-icon dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
+                            <img src="https://via.placeholder.com/32" alt="Profile" class="profile-avatar" id="topbarProfileAvatar">
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#profile">
+                                <i class="fas fa-user me-2"></i> My Profile
+                            </a></li>
+                            <li><a class="dropdown-item" href="#settings">
+                                <i class="fas fa-cog me-2"></i> Settings
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#logout">
+                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Dashboard Page -->
+                <div id="dashboard" class="page-section active">
+                    <div class="page-header">
+                        <div>
+                            <h1>Welcome, <span id="userNameDisplay">User</span></h1>
+                            <p class="text-muted">Here's your job search overview</p>
+                        </div>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-upload"></i> Upload Resume
+                        </button>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="row stats-row">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="stat-card">
+                                <div class="stat-icon applications">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h6>Applications</h6>
+                                    <h3 id="statApplications">0</h3>
+                                    <small>In Progress</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="stat-card">
+                                <div class="stat-icon interviews">
+                                    <i class="fas fa-video"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h6>Interviews</h6>
+                                    <h3 id="statInterviews">0</h3>
+                                    <small>Scheduled</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="stat-card">
+                                <div class="stat-icon saved">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h6>Saved Jobs</h6>
+                                    <h3 id="statSavedJobs">0</h3>
+                                    <small>For Later</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="stat-card">
+                                <div class="stat-icon views">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h6>Profile Views</h6>
+                                    <h3 id="statProfileViews">0</h3>
+                                    <small>This Month</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Applications & Recommendations -->
+                    <div class="row mt-4">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Recent Applications</h5>
+                                </div>
+                                <div class="card-body" id="recentApplicationsContainer">
+                                    <!-- Recent applications will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Recommended Jobs</h5>
+                                </div>
+                                <div class="card-body" id="recommendedJobsContainer">
+                                    <!-- Recommended jobs will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explore Jobs Page -->
+                <div id="jobs" class="page-section">
+                    <div class="page-header">
+                        <h1>Explore Jobs</h1>
+                        <p class="text-muted">Find your next opportunity</p>
+                    </div>
+
+                    <div class="row">
+                        <!-- Filters Sidebar -->
+                        <div class="col-lg-3">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Filters</h5>
+                                    <button class="btn btn-sm btn-link" id="clearFilters">Clear All</button>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Search -->
+                                    <div class="mb-4">
+                                        <label class="form-label">Job Title / Keyword</label>
+                                        <input type="text" class="form-control job-filter" id="jobKeyword" placeholder="e.g. Developer">
+                                    </div>
+
+                                    <!-- Location -->
+                                    <div class="mb-4">
+                                        <label class="form-label">Location</label>
+                                        <input type="text" class="form-control job-filter" id="jobLocation" placeholder="City or Remote">
+                                    </div>
+
+                                    <!-- Job Type -->
+                                    <div class="mb-4">
+                                        <label class="form-label">Job Type</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input job-filter" type="checkbox" id="fullTime" value="Full-time">
+                                            <label class="form-check-label" for="fullTime">Full-time</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input job-filter" type="checkbox" id="partTime" value="Part-time">
+                                            <label class="form-check-label" for="partTime">Part-time</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input job-filter" type="checkbox" id="contract" value="Contract">
+                                            <label class="form-check-label" for="contract">Contract</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Salary Range -->
+                                    <div class="mb-4">
+                                        <label class="form-label">Salary Range</label>
+                                        <input type="range" class="form-range job-filter" id="salaryMin" min="0" max="200" value="0">
+                                        <small class="d-block mt-2">Min: $<span id="salaryMinDisplay">0</span>K</small>
+                                        <input type="range" class="form-range job-filter" id="salaryMax" min="0" max="200" value="200">
+                                        <small class="d-block mt-2">Max: $<span id="salaryMaxDisplay">200</span>K</small>
+                                    </div>
+
+                                    <!-- Experience Level -->
+                                    <div class="mb-4">
+                                        <label class="form-label">Experience Level</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input job-filter" type="checkbox" id="entry" value="Entry Level">
+                                            <label class="form-check-label" for="entry">Entry Level</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input job-filter" type="checkbox" id="mid" value="Mid Level">
+                                            <label class="form-check-label" for="mid">Mid Level</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input job-filter" type="checkbox" id="senior" value="Senior">
+                                            <label class="form-check-label" for="senior">Senior</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sort -->
+                                    <div class="mb-4">
+                                        <label class="form-label">Sort By</label>
+                                        <select class="form-select job-filter" id="sortBy">
+                                            <option value="newest">Newest First</option>
+                                            <option value="salary">Highest Salary</option>
+                                            <option value="relevant">Most Relevant</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Job Listings -->
+                        <div class="col-lg-9">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between">
+                                    <h5>Available Jobs</h5>
+                                    <small id="jobCount">12 jobs found</small>
+                                </div>
+                                <div class="card-body">
+                                    <div class="job-listing" id="jobListing">
+                                        <!-- Jobs will be dynamically populated here -->
+                                    </div>
+                                    <div class="text-center mt-4">
+                                        <button class="btn btn-outline-primary" id="loadMoreJobs">Load More Jobs</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Applications Page -->
+                <div id="applications" class="page-section">
+                    <div class="page-header">
+                        <h1>My Applications</h1>
+                        <p class="text-muted">Track your job applications</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h5>Application History</h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="btn-group" role="group">
+                                        <input type="radio" class="btn-check app-filter" name="status" id="statusAll" value="all" checked>
+                                        <label class="btn btn-sm btn-outline-primary" for="statusAll">All</label>
+                                        
+                                        <input type="radio" class="btn-check app-filter" name="status" id="statusReview" value="Under Review">
+                                        <label class="btn btn-sm btn-outline-primary" for="statusReview">Under Review</label>
+                                        
+                                        <input type="radio" class="btn-check app-filter" name="status" id="statusInterview" value="Interview">
+                                        <label class="btn btn-sm btn-outline-primary" for="statusInterview">Interview</label>
+                                        
+                                        <input type="radio" class="btn-check app-filter" name="status" id="statusRejected" value="Rejected">
+                                        <label class="btn btn-sm btn-outline-primary" for="statusRejected">Rejected</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Job Title</th>
+                                            <th>Company</th>
+                                            <th>Status</th>
+                                            <th>Applied Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="applicationsList">
+                                        <!-- Real applications will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Saved Jobs Page -->
+                <div id="saved" class="page-section">
+                    <div class="page-header">
+                        <h1>Saved Jobs</h1>
+                        <p class="text-muted">Your favorite job listings</p>
+                    </div>
+
+                    <div class="job-listing" id="savedJobsContainer">
+                        <!-- Saved jobs will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Profile Page -->
+                <div id="profile" class="page-section">
+                    <div class="page-header">
+                        <h1>My Profile</h1>
+                        <p class="text-muted">Manage your professional information</p>
+                    </div>
+
+                    <!-- Personal Information -->
+                    <div class="row mb-4">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Personal Information</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="personalInfoForm">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">First Name *</label>
+                                                <input type="text" class="form-control" name="firstName" id="firstName" readonly>
+                                                <small class="text-muted">From login details</small>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Last Name *</label>
+                                                <input type="text" class="form-control" name="lastName" id="lastName" readonly>
+                                                <small class="text-muted">From login details</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Email *</label>
+                                            <input type="email" class="form-control" name="email" id="email" readonly>
+                                            <small class="text-muted">From login details</small>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Phone *</label>
+                                            <input type="tel" class="form-control" name="phone" id="phone" placeholder="Enter your phone number" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Location</label>
+                                            <input type="text" class="form-control" name="location" id="location" placeholder="e.g., San Francisco, CA">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Professional Summary</label>
+                                            <textarea class="form-control" name="summary" id="summary" rows="4" placeholder="Tell us about your professional experience..."></textarea>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">LinkedIn Profile</label>
+                                                <input type="url" class="form-control" name="linkedin" id="linkedin" placeholder="https://linkedin.com/in/...">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">GitHub Profile</label>
+                                                <input type="url" class="form-control" name="github" id="github" placeholder="https://github.com/...">
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Expected Salary</label>
+                                                <input type="number" class="form-control" name="salary" id="salary" placeholder="80000">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Availability</label>
+                                                <select class="form-select" name="availability" id="availability">
+                                                    <option value="">Select availability</option>
+                                                    <option value="immediately">Available Immediately</option>
+                                                    <option value="2weeks">2 Weeks Notice</option>
+                                                    <option value="1month">1 Month Notice</option>
+                                                    <option value="2months">2 Months Notice</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save"></i> Save Personal Info
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Profile Picture</h5>
+                                </div>
+                                <div class="card-body text-center">
+                                    <img src="https://via.placeholder.com/150" alt="Profile" class="rounded-circle mb-3" id="profilePicDisplay" style="width: 150px; height: 150px; object-fit: cover; cursor: pointer; border: 3px solid #f0f0f0;" title="Click to change">
+                                    <div>
+                                        <input type="file" class="form-control" id="profilePic" accept="image/*" style="display: none;">
+                                        <button class="btn btn-primary btn-sm mt-3 w-100" id="uploadPhotoBtn">Upload Photo</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card mt-3">
+                                <div class="card-header">
+                                    <h5>Resume</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted" id="resumeFile">Your Resume.pdf</p>
+                                    <div class="btn-group w-100 mb-3" role="group">
+                                        <button class="btn btn-sm btn-outline-primary" id="downloadResume">Download</button>
+                                        <button class="btn btn-sm btn-outline-danger" id="deleteResume">Delete</button>
+                                    </div>
+                                    <hr>
+                                    <input type="file" class="form-control form-control-sm" id="resumeUpload" accept=".pdf,.doc,.docx">
+                                    <button class="btn btn-primary btn-sm mt-2 w-100" id="uploadResumeBtn">Upload Resume</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Work Experience -->
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5>Work Experience</h5>
+                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#experienceModal">
+                                <i class="fas fa-plus"></i> Add Experience
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="experienceList">
+                                <!-- Experiences will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Education -->
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5>Education</h5>
+                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#educationModal">
+                                <i class="fas fa-plus"></i> Add Education
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="educationList">
+                                <!-- Education will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skills -->
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5>Skills</h5>
+                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#skillModal">
+                                <i class="fas fa-plus"></i> Add Skill
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="skillsList">
+                                <!-- Skills will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages Page -->
+                <div id="messages" class="page-section">
+                    <div class="page-header">
+                        <h1>Messages</h1>
+                        <p class="text-muted">Communicate with recruiters</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="message-list">
+                                <div class="message-item unread">
+                                    <div class="message-avatar">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    <div class="message-content">
+                                        <div class="message-header">
+                                            <h6>John Smith</h6>
+                                            <small>Tech Corp Inc.</small>
+                                            <span class="message-time">2 hours ago</span>
+                                        </div>
+                                        <p>Great! We'd like to schedule an interview for you...</p>
+                                    </div>
+                                </div>
+
+                                <div class="message-item unread">
+                                    <div class="message-avatar">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    <div class="message-content">
+                                        <div class="message-header">
+                                            <h6>Sarah Johnson</h6>
+                                            <small>StartUp Solutions</small>
+                                            <span class="message-time">1 day ago</span>
+                                        </div>
+                                        <p>Thank you for your application. We received it successfully...</p>
+                                    </div>
+                                </div>
+
+                                <div class="message-item">
+                                    <div class="message-avatar">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    <div class="message-content">
+                                        <div class="message-header">
+                                            <h6>Michael Brown</h6>
+                                            <small>Cloud Systems Ltd</small>
+                                            <span class="message-time">3 days ago</span>
+                                        </div>
+                                        <p>Unfortunately, we have decided to move forward with other candidates...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Dashboard JS -->
+    <script src="../js/dashboard.js"></script>
+    <!-- Candidate Specific JS -->
+    <script src="../js/candidate.js"></script>
+
+    <!-- Work Experience Modal -->
+    <div class="modal fade" id="experienceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Work Experience</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="experienceForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Job Title *</label>
+                            <input type="text" class="form-control" name="jobTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Company *</label>
+                            <input type="text" class="form-control" name="company" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Start Date *</label>
+                                <input type="month" class="form-control" name="startDate" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">End Date</label>
+                                <input type="month" class="form-control" name="endDate">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-checkbox">
+                                <input type="checkbox" name="currentlyWorking"> I currently work here
+                            </label>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="description" rows="4"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Experience</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Education Modal -->
+    <div class="modal fade" id="educationModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Education</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="educationForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">School/University *</label>
+                            <input type="text" class="form-control" name="school" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Degree *</label>
+                            <input type="text" class="form-control" name="degree" placeholder="e.g. Bachelor of Science" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Field of Study *</label>
+                            <input type="text" class="form-control" name="field" placeholder="e.g. Computer Science" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Start Year *</label>
+                                <input type="number" class="form-control" name="startYear" min="1950" max="2099" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">End Year *</label>
+                                <input type="number" class="form-control" name="endYear" min="1950" max="2099" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">GPA (optional)</label>
+                            <input type="text" class="form-control" name="gpa" placeholder="e.g. 3.8/4.0">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Education</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skills Modal -->
+    <div class="modal fade" id="skillModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Skill</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="skillForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Skill Name *</label>
+                            <input type="text" class="form-control" name="skillName" placeholder="e.g. React, JavaScript, etc." required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Proficiency Level</label>
+                            <select class="form-select" name="proficiency">
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate" selected>Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                                <option value="Expert">Expert</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Skill</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Detail Modal -->
+    <div class="modal fade" id="appModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Application Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="appModalBody">
+                    <!-- Dynamically populated -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HireFlow - Sign Up</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container-fluid login-container">
+        <div class="row h-100 align-items-center justify-content-center">
+            <!-- Left Section - Branding -->
+            <div class="col-lg-6 d-none d-lg-flex left-section">
+                <div class="branding-content">
+                    <h1 class="brand-title">HireFlow</h1>
+                    <p class="brand-subtitle">Connecting Talent with Opportunity</p>
+                    <div class="features-list mt-5">
+                        <div class="feature-item">
+                            <i class="fas fa-briefcase"></i>
+                            <h5>For Recruiters</h5>
+                            <p>Find and manage top talent effortlessly</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-user-tie"></i>
+                            <h5>For Candidates</h5>
+                            <p>Discover your next career opportunity</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-cogs"></i>
+                            <h5>For Admins</h5>
+                            <p>Complete platform management and control</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Section - Signup Form -->
+            <div class="col-lg-6 col-md-8 col-sm-10">
+                <div class="login-card">
+                    <div class="login-header">
+                        <h2 class="mb-2">Create Account</h2>
+                        <p class="text-muted">Join HireFlow today</p>
+                    </div>
+
+                    <!-- User Type Selection -->
+                    <div class="user-type-section mb-4">
+                        <label class="mb-3">Select User Type</label>
+                        <div class="user-type-buttons">
+                            <input type="radio" name="userType" id="candidate" value="candidate" checked>
+                            <label for="candidate" class="user-type-label">
+                                <i class="fas fa-user"></i>
+                                <span>Candidate</span>
+                            </label>
+
+                            <input type="radio" name="userType" id="recruiter" value="recruiter">
+                            <label for="recruiter" class="user-type-label">
+                                <i class="fas fa-briefcase"></i>
+                                <span>Recruiter</span>
+                            </label>
+
+                            <input type="radio" name="userType" id="admin" value="admin">
+                            <label for="admin" class="user-type-label">
+                                <i class="fas fa-crown"></i>
+                                <span>Admin</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Signup Form -->
+                    <form id="signupForm" novalidate>
+                        <!-- Name Field -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <input type="text" class="form-control" id="name" name="name" 
+                                       placeholder="Enter your full name" required>
+                            </div>
+                            <div class="invalid-feedback" id="nameError"></div>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       placeholder="Enter your email" required>
+                            </div>
+                            <div class="invalid-feedback" id="emailError"></div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="password" class="form-control" id="password" name="password" 
+                                       placeholder="Create a password" required>
+                                <button class="btn btn-outline-secondary toggle-password" type="button">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="invalid-feedback" id="passwordError"></div>
+                        </div>
+
+                        <!-- Confirm Password Field -->
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" 
+                                       placeholder="Confirm your password" required>
+                                <button class="btn btn-outline-secondary toggle-confirm-password" type="button">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="invalid-feedback" id="confirmPasswordError"></div>
+                        </div>
+
+                        <!-- Alert Messages -->
+                        <div id="successAlert" class="alert alert-success alert-dismissible hide" role="alert" style="display:none">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span id="successMessage"></span>
+                        </div>
+
+                        <div id="errorAlert" class="alert alert-danger alert-dismissible hide" role="alert" style="display:none">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <span id="errorMessage"></span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary btn-login w-100 mb-3">
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </button>
+                    </form>
+
+                    <!-- Login Link -->
+                    <div class="text-center">
+                        <p class="mb-0 text-muted">
+                            Already have an account? 
+                            <a href="index.html" class="login-link">Sign in here</a>
+                        </p>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="login-footer mt-4">
+                        <p class="text-center text-muted small mb-0">
+                            <a href="#" class="text-decoration-none">Privacy Policy</a> • 
+                            <a href="#" class="text-decoration-none">Terms of Service</a> • 
+                            <a href="#" class="text-decoration-none">Contact Support</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Config -->
+    <script src="config.js"></script>
+    <!-- API Test Helper -->
+    <script src="js/api-test.js"></script>
+    <!-- Custom JS -->
+    <script src="js/signup.js"></script>
+
+    <!-- Backend Status Check -->
+    <script>
+    (async function() {
+        try {
+            const res = await fetch("http://localhost:5000/api/health", { signal: AbortSignal.timeout(3000) });
+            if (!res.ok) throw new Error();
+        } catch(e) {
+            const banner = document.createElement("div");
+            banner.id = "backendStatus";
+            banner.className = "offline";
+            banner.innerHTML = "⚠️ Backend server is NOT running. Open a terminal and run: <code style=\"background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:3px\">cd backend &amp;&amp; npm run dev</code>";
+            document.body.prepend(banner);
+        }
+    })();
+    </script>
+</body>
+</html>

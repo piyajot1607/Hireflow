@@ -1,0 +1,567 @@
+/* ==================== General Styles ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ==================== Login Container ==================== */
+.login-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-container .row {
+    min-height: 100vh;
+}
+
+/* ==================== Left Section - Branding ==================== */
+.left-section {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.left-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="20" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="30" fill="rgba(255,255,255,0.05)"/></svg>');
+    background-size: 300px 300px;
+    opacity: 0.5;
+}
+
+.branding-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: white;
+    padding: 40px 20px;
+}
+
+.brand-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    letter-spacing: -1px;
+}
+
+.brand-subtitle {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    margin-bottom: 60px;
+    font-weight: 300;
+}
+
+/* ==================== Features List ==================== */
+.features-list {
+    text-align: left;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.feature-item {
+    margin-bottom: 40px;
+    padding-left: 60px;
+    position: relative;
+}
+
+.feature-item i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.feature-item h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: white;
+}
+
+.feature-item p {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    margin: 0;
+}
+
+/* ==================== Login Card ==================== */
+.login-card {
+    background: white;
+    border-radius: 15px;
+    padding: 50px 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-header {
+    margin-bottom: 40px;
+}
+
+.login-header h2 {
+    color: #333;
+    font-weight: 700;
+    font-size: 1.75rem;
+}
+
+.login-header p {
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+
+/* ==================== User Type Selection ==================== */
+.user-type-section label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.user-type-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.user-type-buttons input[type="radio"] {
+    display: none;
+}
+
+.user-type-label {
+    flex: 1;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+    font-weight: 500;
+    color: #666;
+    margin: 0;
+}
+
+.user-type-label i {
+    display: block;
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    color: #667eea;
+}
+
+.user-type-buttons input[type="radio"]:checked + .user-type-label {
+    border-color: #667eea;
+    background-color: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    transform: translateY(-2px);
+}
+
+.user-type-label:hover {
+    border-color: #667eea;
+    background-color: rgba(102, 126, 234, 0.05);
+}
+
+/* ==================== Form Elements ==================== */
+.form-label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.form-control {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    background-color: white;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.1);
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-right: none;
+    color: #667eea;
+}
+
+.input-group .form-control:focus + .input-group-text,
+.input-group .form-control:focus ~ .toggle-password {
+    border-color: #667eea;
+}
+
+.input-group .form-control {
+    border-left: none;
+}
+
+.toggle-password {
+    background-color: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-left: none;
+    color: #667eea;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.toggle-password:hover {
+    background-color: white;
+}
+
+.toggle-password:focus {
+    box-shadow: none;
+}
+
+/* ==================== Form Validation ==================== */
+.form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.form-control.is-invalid:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.1);
+}
+
+.invalid-feedback {
+    display: block;
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+/* ==================== Remember Me & Forgot Password ==================== */
+.form-check-input {
+    width: 1.25em;
+    height: 1.25em;
+    margin-top: 0.125em;
+    border: 2px solid #e0e0e0;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: #667eea;
+    border-color: #667eea;
+}
+
+.form-check-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.form-check-label {
+    margin-bottom: 0;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.forgot-password-link {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.forgot-password-link:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* ==================== Buttons ==================== */
+.btn-login {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-login:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    color: white;
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+.btn-login:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.btn-login i {
+    margin-right: 8px;
+}
+
+/* ==================== Sign Up Link ==================== */
+.signup-link {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.signup-link:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* ==================== Alerts ==================== */
+.alert {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+.alert.hide {
+    display: none;
+}
+
+.alert i {
+    margin-right: 8px;
+}
+
+.alert-success {
+    background-color: rgba(25, 135, 84, 0.1);
+    color: #198754;
+    border-left: 4px solid #198754;
+}
+
+.alert-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border-left: 4px solid #dc3545;
+}
+
+.btn-close {
+    opacity: 0.7;
+    color: currentColor;
+}
+
+.btn-close:hover,
+.btn-close:focus {
+    opacity: 1;
+}
+
+/* ==================== Footer ==================== */
+.login-footer {
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.login-footer a {
+    color: #667eea;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.login-footer a:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* ==================== Modal Styles ==================== */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-title {
+    font-weight: 600;
+}
+
+.btn-close {
+    filter: brightness(0) invert(1);
+}
+
+/* ==================== Responsive Design ==================== */
+@media (max-width: 991.98px) {
+    .login-card {
+        padding: 40px 30px;
+        margin: 20px;
+    }
+
+    .brand-title {
+        font-size: 2.5rem;
+    }
+
+    .features-list {
+        display: none;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .login-card {
+        padding: 30px 20px;
+        margin: 15px;
+    }
+
+    .brand-title {
+        font-size: 2rem;
+    }
+
+    .user-type-buttons {
+        flex-direction: column;
+    }
+
+    .user-type-label {
+        padding: 12px;
+    }
+
+    .user-type-label i {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+    }
+
+    .user-type-label span {
+        font-size: 0.85rem;
+    }
+
+    .login-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .d-flex {
+        flex-direction: column;
+    }
+
+    .forgot-password-link {
+        margin-top: 10px;
+    }
+}
+
+/* ==================== Loading State ==================== */
+.btn-login.loading {
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.btn-login.loading::after {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-left: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ==================== Utility Classes ==================== */
+.text-decoration-none {
+    text-decoration: none !important;
+}
+
+.text-decoration-none:hover {
+    text-decoration: underline !important;
+}
+
+h1, h2, h3, h4, h5 {
+    color: #333;
+}
+
+.text-muted {
+    color: #999 !important;
+}
+
+/* ==================== Alert Fix ====================  */
+.alert.hide {
+    display: none !important;
+}
+.alert.show {
+    display: block !important;
+}
+
+/* ==================== Validation Feedback Fix ==================== */
+.invalid-feedback {
+    display: none;
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+.is-invalid ~ .invalid-feedback,
+.is-invalid + .invalid-feedback {
+    display: block !important;
+}
+/* For feedback placed outside input-group */
+.invalid-feedback[id] {
+    display: none;
+}
+
+/* ==================== Backend Status Banner ==================== */
+#backendStatus {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 9999;
+    text-align: center;
+    padding: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+#backendStatus.offline {
+    background: #dc3545;
+    color: white;
+}
+#backendStatus.online {
+    background: #198754;
+    color: white;
+}

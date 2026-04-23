@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Dashboard - HireFlow</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h4 class="brand-name">
+                    <i class="fas fa-briefcase"></i> HireFlow
+                </h4>
+                <button class="btn-close-sidebar d-lg-none" id="closeSidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#dashboard" data-page="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#job-postings" data-page="job-postings">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Job Postings</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#applications" data-page="applications">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Applications</span>
+                        <span class="badge bg-danger ms-2">8</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#candidates" data-page="candidates">
+                        <i class="fas fa-users"></i>
+                        <span>Candidates</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#interviews" data-page="interviews">
+                        <i class="fas fa-video"></i>
+                        <span>Interviews</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#analytics" data-page="analytics">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Analytics</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#messages" data-page="messages">
+                        <i class="fas fa-envelope"></i>
+                        <span>Messages</span>
+                        <span class="badge bg-danger ms-2">5</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <hr>
+                <button class="btn btn-outline-danger w-100" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation Bar -->
+            <nav class="topbar">
+                <div class="topbar-left">
+                    <button class="btn-toggle-sidebar d-lg-none" id="toggleSidebar">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h5 class="mb-0" id="pageTitle">Dashboard</h5>
+                </div>
+
+                <div class="topbar-right">
+                    <button class="btn btn-icon" id="notificationBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">12</span>
+                    </button>
+                    
+                    <div class="dropdown">
+                        <button class="btn btn-icon dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
+                            <img src="https://via.placeholder.com/32" alt="Profile" class="profile-avatar">
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#profile">
+                                <i class="fas fa-user me-2"></i> My Profile
+                            </a></li>
+                            <li><a class="dropdown-item" href="#settings">
+                                <i class="fas fa-cog me-2"></i> Settings
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#logout">
+                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Dashboard Page -->
+                <div id="dashboard" class="page-section active">
+                    <div class="page-header">
+                        <div>
+                            <h1>Welcome, Sarah Johnson</h1>
+                            <p class="text-muted">Your hiring pipeline overview</p>
+                        </div>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Post New Job
+                        </button>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="row stats-row">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="stat-card">
+                                <div class="stat-icon applications">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h6>Active Jobs</h6>
+                                    <h3>5</h3>
+                                    <small>Open Positions</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="stat-card">
+                                <div class="stat-icon interviews">
+                                    <i class="fas fa-inbox"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h6>Applications</h6>
+                                    <h3>34</h3>
+                                    <small>Pending Review</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="stat-card">
+                                <div class="stat-icon saved">
+                                    <i class="fas fa-video"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h6>Interviews</h6>
+                                    <h3>7</h3>
+                                    <small>This Month</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="stat-card">
+                                <div class="stat-icon views">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h6>Hired</h6>
+                                    <h3>3</h3>
+                                    <small>This Year</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Applications & Open Positions -->
+                    <div class="row mt-4">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Recent Applications</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="application-item">
+                                        <div class="app-company">
+                                            <h6>John Doe</h6>
+                                            <p>Senior Frontend Developer</p>
+                                        </div>
+                                        <div class="app-status">
+                                            <span class="badge bg-info">New</span>
+                                        </div>
+                                        <div class="app-date">
+                                            <small>Applied today</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="application-item">
+                                        <div class="app-company">
+                                            <h6>Jane Smith</h6>
+                                            <p>Full Stack Developer</p>
+                                        </div>
+                                        <div class="app-status">
+                                            <span class="badge bg-warning">In Progress</span>
+                                        </div>
+                                        <div class="app-date">
+                                            <small>Applied 2 days ago</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="application-item">
+                                        <div class="app-company">
+                                            <h6>Mike Johnson</h6>
+                                            <p>Backend Engineer</p>
+                                        </div>
+                                        <div class="app-status">
+                                            <span class="badge bg-success">Interview Scheduled</span>
+                                        </div>
+                                        <div class="app-date">
+                                            <small>Applied 1 week ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Active Job Postings</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="recommended-job">
+                                        <div class="job-info">
+                                            <h6>Senior Frontend Developer</h6>
+                                            <p>React, Vue, Angular</p>
+                                            <small><i class="fas fa-inbox"></i> 12 applications</small>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="recommended-job">
+                                        <div class="job-info">
+                                            <h6>Full Stack Developer</h6>
+                                            <p>Node.js, React, MongoDB</p>
+                                            <small><i class="fas fa-inbox"></i> 8 applications</small>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="recommended-job">
+                                        <div class="job-info">
+                                            <h6>UX/UI Designer</h6>
+                                            <p>Figma, Adobe XD</p>
+                                            <small><i class="fas fa-inbox"></i> 5 applications</small>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Postings Page -->
+                <div id="job-postings" class="page-section">
+                    <div class="page-header">
+                        <h1>Job Postings</h1>
+                        <p class="text-muted">Manage all your active and archived job postings</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5>All Job Postings</h5>
+                            <button class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus"></i> New Job
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Job Title</th>
+                                            <th>Applications</th>
+                                            <th>Status</th>
+                                            <th>Posted Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Senior Frontend Developer</strong></td>
+                                            <td>12</td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>15 days ago</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary">Edit</button>
+                                                <button class="btn btn-sm btn-outline-danger">Close</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Full Stack Developer</strong></td>
+                                            <td>8</td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>10 days ago</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary">Edit</button>
+                                                <button class="btn btn-sm btn-outline-danger">Close</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>UX/UI Designer</strong></td>
+                                            <td>5</td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>8 days ago</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary">Edit</button>
+                                                <button class="btn btn-sm btn-outline-danger">Close</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>DevOps Engineer</strong></td>
+                                            <td>3</td>
+                                            <td><span class="badge bg-secondary">Closed</span></td>
+                                            <td>30 days ago</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary">Reopen</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Applications Page -->
+                <div id="applications" class="page-section">
+                    <div class="page-header">
+                        <h1>Applications</h1>
+                        <p class="text-muted">Review and manage all candidate applications</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="Search candidate...">
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control">
+                                        <option>All Positions</option>
+                                        <option>Frontend Developer</option>
+                                        <option>Backend Developer</option>
+                                        <option>UI/UX Designer</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control">
+                                        <option>All Statuses</option>
+                                        <option>New</option>
+                                        <option>In Progress</option>
+                                        <option>Shortlisted</option>
+                                        <option>Rejected</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="job-listing">
+                                <div class="job-card">
+                                    <div class="job-header">
+                                        <div>
+                                            <h5>John Doe</h5>
+                                            <p class="company">Senior Frontend Developer</p>
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <span class="badge bg-info">New</span>
+                                            <button class="btn btn-sm btn-outline-primary">View Resume</button>
+                                        </div>
+                                    </div>
+                                    <p class="job-description"><strong>Email:</strong> john@example.com | <strong>Phone:</strong> +1 (555) 123-4567</p>
+                                    <div class="job-meta">
+                                        <span><i class="fas fa-star"></i> 5 years experience</span>
+                                        <span><i class="fas fa-map-marker-alt"></i> Remote</span>
+                                        <span><i class="fas fa-calendar"></i> Applied today</span>
+                                    </div>
+                                    <div class="mt-3">
+                                        <button class="btn btn-primary btn-sm">Schedule Interview</button>
+                                        <button class="btn btn-outline-secondary btn-sm">Shortlist</button>
+                                        <button class="btn btn-outline-danger btn-sm">Reject</button>
+                                    </div>
+                                </div>
+
+                                <div class="job-card">
+                                    <div class="job-header">
+                                        <div>
+                                            <h5>Jane Smith</h5>
+                                            <p class="company">Full Stack Developer</p>
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <span class="badge bg-warning">In Progress</span>
+                                            <button class="btn btn-sm btn-outline-primary">View Resume</button>
+                                        </div>
+                                    </div>
+                                    <p class="job-description"><strong>Email:</strong> jane@example.com | <strong>Phone:</strong> +1 (555) 234-5678</p>
+                                    <div class="job-meta">
+                                        <span><i class="fas fa-star"></i> 3 years experience</span>
+                                        <span><i class="fas fa-map-marker-alt"></i> New York</span>
+                                        <span><i class="fas fa-calendar"></i> Applied 2 days ago</span>
+                                    </div>
+                                    <div class="mt-3">
+                                        <button class="btn btn-primary btn-sm">Schedule Interview</button>
+                                        <button class="btn btn-outline-secondary btn-sm">Shortlist</button>
+                                        <button class="btn btn-outline-danger btn-sm">Reject</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Candidates Page -->
+                <div id="candidates" class="page-section">
+                    <div class="page-header">
+                        <h1>Shortlisted Candidates</h1>
+                        <p class="text-muted">Your shortlisted candidates pool</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Candidate</th>
+                                            <th>Position</th>
+                                            <th>Experience</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <strong>Mike Johnson</strong><br>
+                                                <small class="text-muted">mike@example.com</small>
+                                            </td>
+                                            <td>Backend Engineer</td>
+                                            <td>4 years</td>
+                                            <td><span class="badge bg-warning">Interview Scheduled</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary">View</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Emily White</strong><br>
+                                                <small class="text-muted">emily@example.com</small>
+                                            </td>
+                                            <td>Frontend Developer</td>
+                                            <td>3 years</td>
+                                            <td><span class="badge bg-success">Offer Extended</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary">View</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>David Brown</strong><br>
+                                                <small class="text-muted">david@example.com</small>
+                                            </td>
+                                            <td>UX Designer</td>
+                                            <td>5 years</td>
+                                            <td><span class="badge bg-info">Under Review</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary">View</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interviews Page -->
+                <div id="interviews" class="page-section">
+                    <div class="page-header">
+                        <h1>Scheduled Interviews</h1>
+                        <p class="text-muted">Manage your upcoming interviews</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Upcoming Interviews</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="application-item">
+                                        <div class="app-company">
+                                            <h6>Mike Johnson - Backend Engineer</h6>
+                                            <p><i class="fas fa-calendar"></i> April 10, 2026 at 2:00 PM</p>
+                                        </div>
+                                        <div class="app-status">
+                                            <button class="btn btn-sm btn-primary">Join Call</button>
+                                        </div>
+                                        <div class="app-date">
+                                            <small>In 4 days</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="application-item">
+                                        <div class="app-company">
+                                            <h6>Emily White - Frontend Developer</h6>
+                                            <p><i class="fas fa-calendar"></i> April 12, 2026 at 11:00 AM</p>
+                                        </div>
+                                        <div class="app-status">
+                                            <button class="btn btn-sm btn-primary">Join Call</button>
+                                        </div>
+                                        <div class="app-date">
+                                            <small>In 6 days</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="application-item">
+                                        <div class="app-company">
+                                            <h6>David Brown - UX Designer</h6>
+                                            <p><i class="fas fa-calendar"></i> April 15, 2026 at 3:30 PM</p>
+                                        </div>
+                                        <div class="app-status">
+                                            <button class="btn btn-sm btn-primary">Join Call</button>
+                                        </div>
+                                        <div class="app-date">
+                                            <small>In 9 days</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Schedule Interview</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label class="form-label">Candidate</label>
+                                            <select class="form-control">
+                                                <option>Select candidate...</option>
+                                                <option>John Doe</option>
+                                                <option>Jane Smith</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Date</label>
+                                            <input type="date" class="form-control">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Time</label>
+                                            <input type="time" class="form-control">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Interviewer</label>
+                                            <input type="text" class="form-control" placeholder="Your name">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">Schedule</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Page -->
+                <div id="analytics" class="page-section">
+                    <div class="page-header">
+                        <h1>Analytics & Reports</h1>
+                        <p class="text-muted">Track your hiring metrics and performance</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Hiring Funnel</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div style="padding: 20px 0;">
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span>Applications Received</span>
+                                                <strong>250</strong>
+                                            </div>
+                                            <div class="progress" style="height: 25px;">
+                                                <div class="progress-bar" style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span>Interviewed</span>
+                                                <strong>45 (18%)</strong>
+                                            </div>
+                                            <div class="progress" style="height: 25px;">
+                                                <div class="progress-bar" style="width: 18%; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span>Offers Extended</span>
+                                                <strong>8 (3.2%)</strong>
+                                            </div>
+                                            <div class="progress" style="height: 25px;">
+                                                <div class="progress-bar" style="width: 32%; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span>Hired</span>
+                                                <strong>3 (1.2%)</strong>
+                                            </div>
+                                            <div class="progress" style="height: 25px;">
+                                                <div class="progress-bar" style="width: 12%; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Key Metrics</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-6 mb-3">
+                                            <div class="metric-box">
+                                                <h6>Avg. Time to Hire</h6>
+                                                <h3>21 days</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <div class="metric-box">
+                                                <h6>Offer Acceptance Rate</h6>
+                                                <h3>87.5%</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <div class="metric-box">
+                                                <h6>Job Views</h6>
+                                                <h3>1,245</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <div class="metric-box">
+                                                <h6>Application Rate</h6>
+                                                <h3>20.1%</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages Page -->
+                <div id="messages" class="page-section">
+                    <div class="page-header">
+                        <h1>Messages</h1>
+                        <p class="text-muted">Communicate with candidates and team</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="message-list">
+                                <div class="message-item unread">
+                                    <div class="message-avatar">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    <div class="message-content">
+                                        <div class="message-header">
+                                            <h6>Mike Johnson</h6>
+                                            <small>Candidate</small>
+                                            <span class="message-time">1 hour ago</span>
+                                        </div>
+                                        <p>Hi, I'm very interested in the Backend Engineer position...</p>
+                                    </div>
+                                </div>
+
+                                <div class="message-item unread">
+                                    <div class="message-avatar">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    <div class="message-content">
+                                        <div class="message-header">
+                                            <h6>Emily White</h6>
+                                            <small>Candidate</small>
+                                            <span class="message-time">3 hours ago</span>
+                                        </div>
+                                        <p>Thank you for the interview opportunity. Looking forward to it!</p>
+                                    </div>
+                                </div>
+
+                                <div class="message-item">
+                                    <div class="message-avatar">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    <div class="message-content">
+                                        <div class="message-header">
+                                            <h6>HR Team</h6>
+                                            <small>Internal</small>
+                                            <span class="message-time">1 day ago</span>
+                                        </div>
+                                        <p>Updated hiring policy for Q2 2026...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Dashboard JS -->
+    <script src="../js/dashboard.js"></script>
+    <script src="../js/recruiter.js"></script>
+<!-- Applicants Modal -->
+<div class="modal fade" id="applicantsModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Job Applicants</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body" id="applicantsModalBody"></div>
+      <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
