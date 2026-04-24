@@ -231,7 +231,7 @@ async function applyForJob(job) {
               // ⚠️ Do NOT add Content-Type here — browser sets it automatically for FormData
     },
     body: formData
-});s
+});
             const data = await res.json();
             if (data.success) {
                 alert(`Successfully applied to ${job.title}!\n\nThe company will review your application and contact you soon.`);
