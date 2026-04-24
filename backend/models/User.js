@@ -41,7 +41,11 @@ const userSchema = new mongoose.Schema(
         isVerified: {
             type: Boolean,
             default: false
-        }
+        },
+        resetPasswordToken: String,
+        resetPasswordExpire: Date,
+        savedJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Job' }] 
+        
     },
     { timestamps: true }
 );
@@ -58,6 +62,7 @@ userSchema.pre('save', async function (next) {
     try {
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);
+        next();
     } catch (error) {
         next(error);
     }

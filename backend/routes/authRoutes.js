@@ -8,7 +8,8 @@ const router = express.Router();
 const {
     signup,
     login,
-    getCurrentUser
+    getCurrentUser,
+    forgotPassword
 } = require('../controllers/authController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -27,6 +28,7 @@ router.post('/signup', signup);
  * Body: { email, password }
  */
 router.post('/login', login);
+router.post('/forgot-password', forgotPassword);
 
 // ==================== PROTECTED ROUTES ====================
 

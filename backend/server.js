@@ -10,6 +10,9 @@ const connectDB = require('./config/database');
 const errorHandler = require('./middleware/errorHandler');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const adminRoutes = require('./routes/adminRoutes');
+const path = require('path'); 
+const mongoSanitize = require('express-mongo-sanitize');
 
 // Rate limiter for auth routes (max 20 requests per 15 min)
 const authLimiter = rateLimit({
@@ -17,6 +20,11 @@ const authLimiter = rateLimit({
     max: 20,
     message: { success: false, message: 'Too many requests, please try again later.' }
 });
+const appLimiter = rateLimit({                                          // ← ADD
+    windowMs: 60 * 1000,                                                // ← ADD
+    max: 10,                                                            // ← ADD
+    message: { success: false, message: 'Too many requests, slow down.' }  // ← ADD
+});  
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
@@ -38,7 +46,7 @@ const allowedOrigins = [
     'http://127.0.0.1:5500',
     'http://127.0.0.1:3000'
 ];
-
+app.use('/api/admin', adminRoutes)
 app.use(cors({
     origin: function(origin, callback) {
         // Allow requests with no origin (like mobile apps or Postman)
@@ -49,17 +57,28 @@ app.use(cors({
         }
         
         console.log(`CORS request from: ${origin}`);
-        return callback(null, true); // Allow all for development
+        return callback(new Error('Not allowed by CORS'));  // Allow all for development
     },
     credentials: true
 }));
 
 // Security headers
 app.use(helmet({ contentSecurityPolicy: false }));
+// Security headers
+
+
+// In development, log all requests
+if (process.env.NODE_ENV === 'development') {
+    app.use((req, res, next) => {
+        console.log(`${req.method} ${req.url}`);
+        next();
+    });
+}
 
 // Body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(mongoSanitize());
 
 // ==================== ROUTES ====================
 
@@ -75,7 +94,7 @@ app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/jobs', jobRoutes);
 
 // Application routes
-app.use('/api/applications', applicationRoutes);
+app.use('/api/applications', appLimiter, applicationRoutes);
 
 // 404 handler
 app.use((req, res) => {
@@ -86,6 +105,9 @@ app.use((req, res) => {
 
 // Central error handling middleware (must be last)
 app.use(errorHandler);
+
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 // ==================== START SERVER ====================
 

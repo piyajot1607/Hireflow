@@ -56,14 +56,28 @@ document.addEventListener('DOMContentLoaded', function () {
     // ---- Forgot password submit ----
     const resetBtn = document.getElementById('resetSubmitBtn');
     if (resetBtn) {
-        resetBtn.addEventListener('click', function () {
+        resetBtn.addEventListener('click', async function () {
             const email = document.getElementById('resetEmail').value.trim();
             const msgEl = document.getElementById('resetMessage');
             if (!email) {
                 msgEl.innerHTML = '<div class="alert alert-danger">Please enter your email</div>';
                 return;
             }
-            msgEl.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle me-2"></i>If that email exists, a reset link has been sent.</div>';
+            resetBtn.disabled = true;
+            resetBtn.textContent = 'Sending...';
+            try {
+                await fetch(`${API_BASE}/api/auth/forgot-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                msgEl.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle me-2"></i>If that email exists, a reset link has been sent.</div>';
+            } catch (err) {
+                msgEl.innerHTML = '<div class="alert alert-danger">Failed to send. Please try again.</div>';
+            } finally {
+                resetBtn.disabled = false;
+                resetBtn.textContent = 'Send Reset Link';
+            }
         });
     }
 

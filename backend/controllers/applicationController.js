@@ -1,5 +1,5 @@
 const Application = require('../models/Application');
-const Job = require('../models/job');
+const Job = require('../models/Job');
 
 exports.applyToJob = async (req, res, next) => {
   try {
@@ -9,6 +9,13 @@ exports.applyToJob = async (req, res, next) => {
     const existing = await Application.findOne({ job: req.params.jobId, candidate: req.user.id });
     if (existing)
       return res.status(400).json({ success: false, message: 'Already applied to this job' });
+    const resumeData = req.file ? {
+        filename: req.file.originalname,
+        path: req.file.path,
+        mimetype: req.file.mimetype,
+        size: req.file.size
+    } : null;
+
     const app = await Application.create({
       job: req.params.jobId,
       candidate: req.user.id,
@@ -27,6 +34,16 @@ exports.getMyApplications = async (req, res, next) => {
     res.json({ success: true, count: apps.length, applications: apps });
   } catch (err) { next(err); }
 };
+exports.getAllApplications = async (req, res, next) => {
+  try {
+    const apps = await Application.find()
+      .populate('candidate', 'name email')
+      .populate('job', 'title company')
+      .sort('-createdAt')
+      .limit(100);
+    res.json({ success: true, count: apps.length, applications: apps });
+  } catch (err) { next(err); }
+};
 
 exports.withdrawApplication = async (req, res, next) => {
   try {
@@ -36,6 +53,7 @@ exports.withdrawApplication = async (req, res, next) => {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     app.status = 'Withdrawn';
     await app.save();
+    await Job.findByIdAndUpdate(app.job, { $inc: { applicationsCount: -1 } });
     res.json({ success: true, application: app });
   } catch (err) { next(err); }
 };

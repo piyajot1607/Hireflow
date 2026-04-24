@@ -2,7 +2,7 @@
  * Authentication Controller
  * Handles signup, login, and token generation
  */
-
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { validateSignup, validateLogin } = require('../utils/validators');
@@ -70,12 +70,17 @@ exports.signup = async (req, res, next) => {
         }
 
         // Create new user
+        // Prevent self-assigning admin role
+        const allowedRoles = ['candidate', 'recruiter'];
+        const userRole = allowedRoles.includes(role) ? role : 'candidate';
+
         const user = await User.create({
-            name: name.trim(),
+             name: name.trim(),
             email: email.toLowerCase(),
             password,
-            role: role || 'candidate'
+            role: userRole   // ← use filtered role
         });
+        
 
         // Send token response
         sendTokenResponse(user, 201, res);
@@ -154,5 +159,28 @@ exports.getCurrentUser = async (req, res, next) => {
 
     } catch (error) {
         next(error);
+    }
+};
+
+exports.forgotPassword = async (req, res, next) => {
+    try {
+        const { email } = req.body;
+        if (!email) return res.status(400).json({ success: false, message: 'Email is required' });
+
+        const user = await User.findOne({ email: email.toLowerCase() });
+        if (!user) {
+            return res.status(200).json({ success: true, message: 'If that email exists, a reset link was sent.' });
+        }
+
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+        user.resetPasswordExpire = Date.now() + 30 * 60 * 1000;
+        await user.save({ validateBeforeSave: false });
+
+        console.log(`Password reset token for ${email}: ${resetToken}`);
+
+        res.status(200).json({ success: true, message: 'If that email exists, a reset link was sent.' });
+    } catch (err) {
+        next(err);
     }
 };

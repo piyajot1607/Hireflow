@@ -23,7 +23,7 @@ const validateSignup = (name, email, password, role) => {
     }
 
     // Role validation
-    const validRoles = ['candidate', 'recruiter', 'admin'];
+    const validRoles = ['candidate', 'recruiter'];
     if (role && !validRoles.includes(role)) {
         errors.role = 'Invalid role. Must be candidate, recruiter, or admin';
     }

@@ -1,14 +1,6 @@
 // ==================== RECRUITER-SPECIFIC FUNCTIONALITY ====================
 
-const API_BASE = 'http://localhost:5000';
 
-function getAuthHeaders() {
-    const token = localStorage.getItem('hireflow_auth_token');
-    return {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    };
-}
 
 // ==================== POST JOB ====================
 document.addEventListener('DOMContentLoaded', function () {
@@ -98,6 +90,10 @@ async function loadMyJobs() {
             `;
             container.appendChild(row);
         });
+    }catch (err) {
+        container.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Failed to load jobs</td></tr>';
+        console.error('Failed to load jobs:', err);
+    }
 }
 
 // ==================== UPDATE DASHBOARD STATS ====================
@@ -119,13 +115,11 @@ async function updateDashboardStats() {
             });
 
             // Update active jobs stat
-            const activeJobsElement = document.querySelector('[class*="stat-card"]:nth-child(1) h3');
+            const activeJobsElement = document.getElementById('statActiveJobs');
             if (activeJobsElement) activeJobsElement.textContent = activeJobs;
 
-            // Update applications stat
-            const applicationsElement = document.querySelector('[class*="stat-card"]:nth-child(2) h3');
+            const applicationsElement = document.getElementById('statTotalApplications');
             if (applicationsElement) applicationsElement.textContent = totalApplications;
-
             // Update applications badge in sidebar
             const appBadge = document.querySelector('a[data-page="applications"] .badge');
             if (appBadge) appBadge.textContent = totalApplications;

@@ -1,7 +1,7 @@
 // ==================== CANDIDATE-SPECIFIC FUNCTIONALITY ====================
 
 // API base URL
-const API_BASE = 'http://localhost:5000';
+
 
 // Store fetched jobs from API
 let allJobs = [];
@@ -13,8 +13,8 @@ let mockApplications = [];
 document.addEventListener('DOMContentLoaded', function () {
     loadJobListings();
     setupJobFilters();
-    setupApplicationFilters();
     setupProfileForms();
+    setupApplicationFilters();
     setupApplicationModals();
     loadMyApplicationsFromAPI(); // Load real applications from API
 });
@@ -86,7 +86,7 @@ async function loadJobListings(filters = {}) {
                 <div class="job-header">
                     <h5>${job.title}</h5>
                     <button class="btn btn-sm btn-${saved ? 'primary' : 'outline-primary'} save-job-btn" data-job-id="${job._id}">
-                        <i class="fas fa-heart${saved ? '-solid' : ''}"></i> ${saved ? 'Saved' : 'Save'}
+                        <i class=\"${saved ? 'fas' : 'far'} fa-heart\"></i> ${saved ? 'Saved' : 'Save'}
                     </button>
                 </div>
                 <p class="company">${job.company}</p>
@@ -184,12 +184,11 @@ function attachJobButtonListeners() {
             if (this.classList.contains('btn-outline-primary')) {
                 this.classList.remove('btn-outline-primary');
                 this.classList.add('btn-primary');
-                this.innerHTML = '<i class="fas fa-heart-solid"></i> Saved';
+                this.innerHTML = '<i class="fas fa-heart"></i> Saved';
             } else {
                 this.classList.add('btn-outline-primary');
                 this.classList.remove('btn-primary');
-                this.innerHTML = '<i class="fas fa-heart"></i> Save';
-            }
+                this.innerHTML = '<i class="far fa-heart"></i> Save';            }
         });
     });
 
@@ -216,14 +215,23 @@ async function applyForJob(job) {
     // Call the API with proper job ID
     if (token && jobId) {
         try {
+            const formData = new FormData();
+            formData.append('coverLetter', '');
+
+            // Attach resume file if candidate has one selected
+            const fileInput = document.getElementById('resumeUpload');
+            if (fileInput && fileInput.files[0]) {
+                formData.append('resume', fileInput.files[0]);
+            }
+
             const res = await fetch(`${API_BASE}/api/applications/job/${jobId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ coverLetter: '' })
-            });
+            method: 'POST',
+            headers: {
+            'Authorization': `Bearer ${token}`
+              // ⚠️ Do NOT add Content-Type here — browser sets it automatically for FormData
+    },
+    body: formData
+});s
             const data = await res.json();
             if (data.success) {
                 alert(`Successfully applied to ${job.title}!\n\nThe company will review your application and contact you soon.`);
@@ -354,20 +362,30 @@ function getStatusBadge(status) {
 
 function attachApplicationListeners() {
     document.querySelectorAll('.withdraw-app').forEach(btn => {
-        btn.addEventListener('click', function (e) {
+        btn.addEventListener('click', async function (e) {
             e.preventDefault();
-            const appId = parseInt(this.dataset.appId);
+            const appId = this.dataset.appId; // keep as string (_id from API)
             const app = mockApplications.find(a => a.id === appId);
-            
-            if (app && ['Under Review', 'Interview Scheduled'].includes(app.status)) {
-                if (confirm(`Withdraw application for ${app.jobTitle}?`)) {
-                    mockApplications = mockApplications.filter(a => a.id !== appId);
-                    saveApplicationsToStorage();
-                    filterApplications('all');
-                    alert('Application withdrawn successfully');
+            if (!app) return;
+            if (['Rejected', 'Withdrawn', 'Offered'].includes(app.status)) {
+                alert('Cannot withdraw this application');
+                return;
+            }
+            if (!confirm(`Withdraw application for ${app.jobTitle}?`)) return;
+            try {
+                const res = await fetch(`${API_BASE}/api/applications/${appId}/withdraw`, {
+                    method: 'PATCH',
+                    headers: getAuthHeaders()
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showNotification('Application withdrawn successfully', 'success');
+                    loadMyApplicationsFromAPI(); // refresh from server
+                } else {
+                    alert(data.message || 'Failed to withdraw');
                 }
-            } else {
-                alert('Cannot withdraw applications with this status');
+            } catch (err) {
+                alert('Network error. Please try again.');
             }
         });
     });
@@ -376,7 +394,7 @@ function attachApplicationListeners() {
 function setupApplicationModals() {
     const appModal = document.getElementById('appModal');
     appModal.addEventListener('show.bs.modal', function (e) {
-        const appId = parseInt(e.relatedTarget.dataset.appId);
+        const appId = e.relatedTarget.dataset.appId; // NO parseInt
         const app = mockApplications.find(a => a.id === appId);
         
         if (app) {
@@ -546,11 +564,14 @@ function setupExperienceHandlers() {
     // Delete experience
     document.addEventListener('click', function (e) {
         if (e.target.classList.contains('delete-exp')) {
+            const index = parseInt(e.target.dataset.expIndex);
             if (confirm('Delete this experience?')) {
-                const experience = JSON.parse(localStorage.getItem('hireflow_experience') || '[]');
+                let experience = JSON.parse(localStorage.getItem('hireflow_experience') || '[]');
+                experience.splice(index, 1); // ← ADD THIS
                 localStorage.setItem('hireflow_experience', JSON.stringify(experience));
+                loadExperiences(); // ← ADD THIS to refresh the UI
                 showNotification('Experience deleted', 'success');
-            }
+          }
         }
     });
 }
@@ -706,6 +727,3 @@ style.textContent = `
 document.head.appendChild(style);
 
 // On page load, try to load real applications from API
-document.addEventListener('DOMContentLoaded', function () {
-    loadMyApplicationsFromAPI();
-});

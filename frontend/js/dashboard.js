@@ -208,18 +208,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Load candidate dashboard data
     const userRole = JSON.parse(localStorage.getItem('hireflow_user') || '{}').role;
     if (userRole === 'candidate') {
-        loadCandidateDashboardStats();
-        loadRecentApplications();
-        loadRecommendedJobs();
-        loadSavedJobs();
-        loadProfileData();
-        loadExperiences();
-        loadEducation();
-        loadSkills();
+        const dashboardLink = document.querySelector('[data-page="dashboard"]');
+        if (dashboardLink) dashboardLink.click();
         setupPhotoUpload();
-        
-        // Setup profile modal handlers
         setupProfileModalHandlers();
+        startPolling();                                        // ← ADD
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();                  // ← ADD
+        }
     }
 });
 
@@ -347,7 +343,7 @@ async function loadRecommendedJobs() {
                         <small><i class="fas fa-map-marker-alt"></i> ${job.location}</small>
                     </div>
                     <button class="btn btn-sm btn-${isSaved ? 'primary' : 'outline-primary'} save-recommended-job" data-job-id="${job._id}">
-                        <i class="fas fa-heart${isSaved ? '-solid' : ''}"></i>
+                        <i class=\"${isSaved ? 'fas' : 'far'} fa-heart\"></i>
                     </button>
                 </div>
             `;
@@ -372,7 +368,7 @@ async function loadRecommendedJobs() {
                     saved.push(jobId);
                     this.classList.remove('btn-outline-primary');
                     this.classList.add('btn-primary');
-                    this.innerHTML = '<i class="fas fa-heart-solid"></i>';
+                    this.innerHTML = '<i class="fas fa-heart"></i>';
                 }
                 
                 localStorage.setItem('hireflow_savedJobs', JSON.stringify(saved));
@@ -414,7 +410,7 @@ async function loadSavedJobs() {
                     <div class="job-header">
                         <h5>${job.title}</h5>
                         <button class="btn btn-sm btn-primary unsave-job" data-job-id="${job._id}">
-                            <i class="fas fa-heart-solid"></i> Saved
+                           <i class=\"fas fa-heart\"></i> Saved
                         </button>
                     </div>
                     <p class="company">${job.company}</p>
@@ -1046,3 +1042,77 @@ function setupProfileModalHandlers() {
         });
     }
 }
+// ==================== POLLING FOR REAL-TIME UPDATES ====================
+
+let pollingInterval = null;
+
+function startPolling() {
+    pollingInterval = setInterval(async () => {
+        const userRole = JSON.parse(localStorage.getItem('hireflow_user') || '{}').role;
+        if (userRole === 'candidate') {
+            await checkForApplicationStatusChanges();
+        } else if (userRole === 'recruiter') {
+            await checkForNewApplications();
+        }
+    }, 30000);
+}
+
+function stopPolling() {
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+    }
+}
+
+async function checkForApplicationStatusChanges() {
+    try {
+        const res = await fetch(`${API_BASE}/api/applications/my`, { headers: getAuthHeaders() });
+        const data = await res.json();
+        if (!data.success) return;
+        const previous = window._previousApplications || [];
+        const current = data.applications;
+        current.forEach(app => {
+            const prev = previous.find(p => p._id === app._id);
+            if (prev && prev.status !== app.status) {
+                showRealTimeNotification(`Application Update`, `Your application for "${app.job?.title}" is now: ${app.status}`);
+            }
+        });
+        window._previousApplications = current;
+        loadCandidateDashboardStats();
+    } catch (err) {}
+}
+
+async function checkForNewApplications() {
+    try {
+        const res = await fetch(`${API_BASE}/api/jobs/my-jobs`, { headers: getAuthHeaders() });
+        const data = await res.json();
+        if (!data.success) return;
+        let total = 0;
+        data.jobs.forEach(j => total += (j.applicationsCount || 0));
+        const prev = window._previousApplicationCount || 0;
+        if (total > prev) {
+            showRealTimeNotification('New Application!', `You have ${total - prev} new application(s)`);
+            updateDashboardStats();
+        }
+        window._previousApplicationCount = total;
+    } catch (err) {}
+}
+
+function showRealTimeNotification(title, body) {
+    const badge = document.querySelector('#notificationBtn .badge');
+    if (badge) {
+        badge.textContent = (parseInt(badge.textContent || '0') + 1);
+        badge.style.display = 'block';
+    }
+    if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification(title, { body, icon: '/favicon.ico' });
+    }
+    const toast = document.createElement('div');
+    toast.className = 'alert alert-info alert-dismissible fade show';
+    toast.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;min-width:300px;';
+    toast.innerHTML = `<strong>${title}</strong><br>${body}<button class="btn-close" data-bs-dismiss="alert"></button>`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 6000);
+}
+
+window.addEventListener('beforeunload', stopPolling);

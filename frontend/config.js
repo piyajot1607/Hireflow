@@ -41,7 +41,6 @@ const HireFlowConfig = {
     // ==================== Local Storage Keys ====================
     STORAGE_KEYS: {
         AUTH_TOKEN: 'hireflow_auth_token',
-        REFRESH_TOKEN: 'hireflow_refresh_token',
         USER_EMAIL: 'hireflow_email',
         USER_TYPE: 'hireflow_userType',
         USER_ID: 'hireflow_userId',
