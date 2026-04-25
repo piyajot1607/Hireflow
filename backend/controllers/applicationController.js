@@ -12,7 +12,8 @@ exports.applyToJob = async (req, res, next) => {
     const app = await Application.create({
       job: req.params.jobId,
       candidate: req.user.id,
-      coverLetter: req.body.coverLetter || ''
+      coverLetter: req.body.coverLetter || '',
+      resume: resumeData
     });
     await Job.findByIdAndUpdate(req.params.jobId, { $inc: { applicationsCount: 1 } });
     res.status(201).json({ success: true, application: app });
