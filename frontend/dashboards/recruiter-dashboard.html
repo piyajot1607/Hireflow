@@ -42,7 +42,7 @@
                     <a class="nav-link" href="#applications" data-page="applications">
                         <i class="fas fa-file-alt"></i>
                         <span>Applications</span>
-                        <span class="badge bg-danger ms-2">8</span>
+                        <span class="badge bg-danger ms-2" id="sidebarAppBadge" style="display:none">0</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -67,7 +67,6 @@
                     <a class="nav-link" href="#messages" data-page="messages">
                         <i class="fas fa-envelope"></i>
                         <span>Messages</span>
-                        <span class="badge bg-danger ms-2">5</span>
                     </a>
                 </li>
             </ul>
@@ -94,7 +93,7 @@
                 <div class="topbar-right">
                     <button class="btn btn-icon" id="notificationBtn">
                         <i class="fas fa-bell"></i>
-                        <span class="notification-badge">12</span>
+                        <span class="notification-badge" id="notificationCount">0</span>
                     </button>
                     
                     <div class="dropdown">
@@ -123,7 +122,7 @@
                 <div id="dashboard" class="page-section active">
                     <div class="page-header">
                         <div>
-                            <h1>Welcome, Sarah Johnson</h1>
+                           <h1 id="recruiterWelcome">Welcome</h1>
                             <p class="text-muted">Your hiring pipeline overview</p>
                         </div>
                         <button class="btn btn-primary">
@@ -154,7 +153,6 @@
                                 <div class="stat-content">
                                     <h6>Applications</h6>
                                     <h3 id="statTotalApplications">0</h3>
-
                                     <small>Pending Review</small>
                                 </div>
                             </div>
@@ -167,7 +165,7 @@
                                 </div>
                                 <div class="stat-content">
                                     <h6>Interviews</h6>
-                                    <h3>7</h3>
+                                    <h3 id="statInterviews">0</h3>
                                     <small>This Month</small>
                                 </div>
                             </div>
@@ -180,7 +178,7 @@
                                 </div>
                                 <div class="stat-content">
                                     <h6>Hired</h6>
-                                    <h3>3</h3>
+                                    <h3 id="statHired">0</h3>
                                     <small>This Year</small>
                                 </div>
                             </div>
@@ -194,44 +192,9 @@
                                 <div class="card-header">
                                     <h5>Recent Applications</h5>
                                 </div>
-                                <div class="card-body">
-                                    <div class="application-item">
-                                        <div class="app-company">
-                                            <h6>John Doe</h6>
-                                            <p>Senior Frontend Developer</p>
-                                        </div>
-                                        <div class="app-status">
-                                            <span class="badge bg-info">New</span>
-                                        </div>
-                                        <div class="app-date">
-                                            <small>Applied today</small>
-                                        </div>
-                                    </div>
-
-                                    <div class="application-item">
-                                        <div class="app-company">
-                                            <h6>Jane Smith</h6>
-                                            <p>Full Stack Developer</p>
-                                        </div>
-                                        <div class="app-status">
-                                            <span class="badge bg-warning">In Progress</span>
-                                        </div>
-                                        <div class="app-date">
-                                            <small>Applied 2 days ago</small>
-                                        </div>
-                                    </div>
-
-                                    <div class="application-item">
-                                        <div class="app-company">
-                                            <h6>Mike Johnson</h6>
-                                            <p>Backend Engineer</p>
-                                        </div>
-                                        <div class="app-status">
-                                            <span class="badge bg-success">Interview Scheduled</span>
-                                        </div>
-                                        <div class="app-date">
-                                            <small>Applied 1 week ago</small>
-                                        </div>
+                                <div class="card-body" id="recentApplicationsList">
+                                    <div class="text-center py-3 text-muted">
+                                     <i class="fas fa-spinner fa-spin"></i> Loading...
                                     </div>
                                 </div>
                             </div>
@@ -242,39 +205,8 @@
                                 <div class="card-header">
                                     <h5>Active Job Postings</h5>
                                 </div>
-                                <div class="card-body">
-                                    <div class="recommended-job">
-                                        <div class="job-info">
-                                            <h6>Senior Frontend Developer</h6>
-                                            <p>React, Vue, Angular</p>
-                                            <small><i class="fas fa-inbox"></i> 12 applications</small>
-                                        </div>
-                                        <button class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </div>
-
-                                    <div class="recommended-job">
-                                        <div class="job-info">
-                                            <h6>Full Stack Developer</h6>
-                                            <p>Node.js, React, MongoDB</p>
-                                            <small><i class="fas fa-inbox"></i> 8 applications</small>
-                                        </div>
-                                        <button class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </div>
-
-                                    <div class="recommended-job">
-                                        <div class="job-info">
-                                            <h6>UX/UI Designer</h6>
-                                            <p>Figma, Adobe XD</p>
-                                            <small><i class="fas fa-inbox"></i> 5 applications</small>
-                                        </div>
-                                        <button class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </div>
+                                <div class="card-body" id="activeJobPostingsList">
+                                    
                                 </div>
                             </div>
                         </div>
@@ -307,46 +239,8 @@
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><strong>Senior Frontend Developer</strong></td>
-                                            <td>12</td>
-                                            <td><span class="badge bg-success">Active</span></td>
-                                            <td>15 days ago</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary">Edit</button>
-                                                <button class="btn btn-sm btn-outline-danger">Close</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Full Stack Developer</strong></td>
-                                            <td>8</td>
-                                            <td><span class="badge bg-success">Active</span></td>
-                                            <td>10 days ago</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary">Edit</button>
-                                                <button class="btn btn-sm btn-outline-danger">Close</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>UX/UI Designer</strong></td>
-                                            <td>5</td>
-                                            <td><span class="badge bg-success">Active</span></td>
-                                            <td>8 days ago</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary">Edit</button>
-                                                <button class="btn btn-sm btn-outline-danger">Close</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>DevOps Engineer</strong></td>
-                                            <td>3</td>
-                                            <td><span class="badge bg-secondary">Closed</span></td>
-                                            <td>30 days ago</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary">Reopen</button>
-                                            </td>
-                                        </tr>
+                                    <tbody id="myJobsList">
+                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -368,7 +262,7 @@
                                     <input type="text" class="form-control" placeholder="Search candidate...">
                                 </div>
                                 <div class="col-md-4">
-                                    <select class="form-control">
+                                    <select class="form-control" id="filterPosition">
                                         <option>All Positions</option>
                                         <option>Frontend Developer</option>
                                         <option>Backend Developer</option>
@@ -376,7 +270,7 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <select class="form-control">
+                                    <select class="form-control" id="filterStatus">
                                         <option>All Statuses</option>
                                         <option>New</option>
                                         <option>In Progress</option>
@@ -386,53 +280,9 @@
                                 </div>
                             </div>
 
-                            <div class="job-listing">
-                                <div class="job-card">
-                                    <div class="job-header">
-                                        <div>
-                                            <h5>John Doe</h5>
-                                            <p class="company">Senior Frontend Developer</p>
-                                        </div>
-                                        <div class="d-flex gap-2">
-                                            <span class="badge bg-info">New</span>
-                                            <button class="btn btn-sm btn-outline-primary">View Resume</button>
-                                        </div>
-                                    </div>
-                                    <p class="job-description"><strong>Email:</strong> john@example.com | <strong>Phone:</strong> +1 (555) 123-4567</p>
-                                    <div class="job-meta">
-                                        <span><i class="fas fa-star"></i> 5 years experience</span>
-                                        <span><i class="fas fa-map-marker-alt"></i> Remote</span>
-                                        <span><i class="fas fa-calendar"></i> Applied today</span>
-                                    </div>
-                                    <div class="mt-3">
-                                        <button class="btn btn-primary btn-sm">Schedule Interview</button>
-                                        <button class="btn btn-outline-secondary btn-sm">Shortlist</button>
-                                        <button class="btn btn-outline-danger btn-sm">Reject</button>
-                                    </div>
-                                </div>
-
-                                <div class="job-card">
-                                    <div class="job-header">
-                                        <div>
-                                            <h5>Jane Smith</h5>
-                                            <p class="company">Full Stack Developer</p>
-                                        </div>
-                                        <div class="d-flex gap-2">
-                                            <span class="badge bg-warning">In Progress</span>
-                                            <button class="btn btn-sm btn-outline-primary">View Resume</button>
-                                        </div>
-                                    </div>
-                                    <p class="job-description"><strong>Email:</strong> jane@example.com | <strong>Phone:</strong> +1 (555) 234-5678</p>
-                                    <div class="job-meta">
-                                        <span><i class="fas fa-star"></i> 3 years experience</span>
-                                        <span><i class="fas fa-map-marker-alt"></i> New York</span>
-                                        <span><i class="fas fa-calendar"></i> Applied 2 days ago</span>
-                                    </div>
-                                    <div class="mt-3">
-                                        <button class="btn btn-primary btn-sm">Schedule Interview</button>
-                                        <button class="btn btn-outline-secondary btn-sm">Shortlist</button>
-                                        <button class="btn btn-outline-danger btn-sm">Reject</button>
-                                    </div>
+                            <div class="job-listing" id="allApplicationsList">
+                                <div class="text-center py-4 text-muted">
+                                    <i class="fas fa-spinner fa-spin"></i> Loading applications...
                                 </div>
                             </div>
                         </div>
@@ -459,43 +309,8 @@
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <strong>Mike Johnson</strong><br>
-                                                <small class="text-muted">mike@example.com</small>
-                                            </td>
-                                            <td>Backend Engineer</td>
-                                            <td>4 years</td>
-                                            <td><span class="badge bg-warning">Interview Scheduled</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary">View</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <strong>Emily White</strong><br>
-                                                <small class="text-muted">emily@example.com</small>
-                                            </td>
-                                            <td>Frontend Developer</td>
-                                            <td>3 years</td>
-                                            <td><span class="badge bg-success">Offer Extended</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary">View</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <strong>David Brown</strong><br>
-                                                <small class="text-muted">david@example.com</small>
-                                            </td>
-                                            <td>UX Designer</td>
-                                            <td>5 years</td>
-                                            <td><span class="badge bg-info">Under Review</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary">View</button>
-                                            </td>
-                                        </tr>
+                                    <tbody id="shortlistedCandidatesList">
+                                        
                                     </tbody>
                                 </table>
                             </div>
