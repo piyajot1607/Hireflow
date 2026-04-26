@@ -56,17 +56,31 @@ Open `frontend/index.html` using **VS Code Live Server** (port 5500) or any stat
 | POST | /api/auth/signup | Public | Register |
 | POST | /api/auth/login | Public | Login |
 | GET | /api/auth/me | Protected | Current user |
+| PUT | /api/auth/profile | Protected | Update user profile |
+| PUT | /api/auth/upload-resume | Candidate | Upload candidate resume |
 | GET | /api/jobs | Public | List all active jobs |
 | POST | /api/jobs | Recruiter | Post a job |
 | GET | /api/jobs/my-jobs | Recruiter | Recruiter's own jobs |
 | GET | /api/jobs/:id | Public | Job detail |
 | PUT | /api/jobs/:id | Recruiter/Admin | Update job |
 | DELETE | /api/jobs/:id | Recruiter/Admin | Delete job |
-| GET | /api/jobs/:id/applicants | Recruiter/Admin | View applicants |
-| POST | /api/applications/job/:jobId | Candidate | Apply to job |
+| POST | /api/applications/job/:jobId | Candidate | Apply to job (supports resume + cover letter) |
 | GET | /api/applications/my | Candidate | My applications |
 | PATCH | /api/applications/:id/withdraw | Candidate | Withdraw |
 | PATCH | /api/applications/:id/status | Recruiter/Admin | Update status |
+| GET | /api/applications/job/:jobId | Recruiter/Admin | View applicants for a job |
+| POST | /api/applications/job/:jobId/rank | Recruiter/Admin | Rank applicants with AI |
+
+### AI Setup
+
+To use AI ranking, add this in backend `.env`:
+
+```
+XAI_API_KEY=your_xai_api_key_here
+XAI_MODEL=grok-4-latest
+```
+
+If you do not set `XAI_API_KEY`, the backend can still fall back to the existing Gemini config.
 
 ---
 

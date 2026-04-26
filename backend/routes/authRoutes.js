@@ -1,6 +1,5 @@
 /**
  * Authentication Routes
- * Handles signup, login, and user authentication endpoints
  */
 
 const express = require('express');
@@ -8,33 +7,20 @@ const router = express.Router();
 const {
     signup,
     login,
-    getCurrentUser
+    getCurrentUser,
+    uploadResume,
+    updateProfile
 } = require('../controllers/authController');
-const { protect } = require('../middleware/authMiddleware');
+const { protect, authorize } = require('../middleware/authMiddleware');
+const { resumeUpload } = require('../utils/multerConfig');
 
-// ==================== PUBLIC ROUTES ====================
-
-/**
- * POST /api/auth/signup
- * Create a new user account
- * Body: { name, email, password, role }
- */
+// Public routes
 router.post('/signup', signup);
-
-/**
- * POST /api/auth/login
- * User login
- * Body: { email, password }
- */
 router.post('/login', login);
 
-// ==================== PROTECTED ROUTES ====================
-
-/**
- * GET /api/auth/me
- * Get current authenticated user
- * Headers: Authorization: Bearer <token>
- */
+// Protected routes
 router.get('/me', protect, getCurrentUser);
+router.put('/profile', protect, updateProfile);
+router.put('/upload-resume', protect, authorize('candidate'), resumeUpload.single('resume'), uploadResume);
 
 module.exports = router;

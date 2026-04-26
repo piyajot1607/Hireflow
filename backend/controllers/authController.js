@@ -1,19 +1,16 @@
 /**
  * Authentication Controller
- * Handles signup, login, and token generation
+ * Handles signup, login, token generation, profile, and resume upload
  */
 
+const path = require('path');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { validateSignup, validateLogin } = require('../utils/validators');
+const { extractTextFromFile } = require('../utils/resumeParser');
 
 // ==================== HELPER FUNCTIONS ====================
 
-/**
- * Generate JWT Token
- * @param {string} userId - User ID
- * @returns {string} JWT Token
- */
 const generateToken = (userId) => {
     return jwt.sign(
         { id: userId },
@@ -22,15 +19,9 @@ const generateToken = (userId) => {
     );
 };
 
-/**
- * Send Response with Token
- */
 const sendTokenResponse = (user, statusCode, res) => {
     const token = generateToken(user._id);
-
-    // Remove password from output
     user.password = undefined;
-
     res.status(statusCode).json({
         success: true,
         token,
@@ -50,7 +41,6 @@ exports.signup = async (req, res, next) => {
     try {
         const { name, email, password, role } = req.body;
 
-        // Validate input
         const validation = validateSignup(name, email, password, role);
         if (!validation.isValid) {
             return res.status(400).json({
@@ -60,16 +50,11 @@ exports.signup = async (req, res, next) => {
             });
         }
 
-        // Check if user already exists
         const existingUser = await User.findOne({ email: email.toLowerCase() });
         if (existingUser) {
-            return res.status(400).json({
-                success: false,
-                message: 'Email already registered'
-            });
+            return res.status(400).json({ success: false, message: 'Email already registered' });
         }
 
-        // Create new user
         const user = await User.create({
             name: name.trim(),
             email: email.toLowerCase(),
@@ -77,9 +62,7 @@ exports.signup = async (req, res, next) => {
             role: role || 'candidate'
         });
 
-        // Send token response
         sendTokenResponse(user, 201, res);
-
     } catch (error) {
         next(error);
     }
@@ -91,7 +74,6 @@ exports.login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
-        // Validate input
         const validation = validateLogin(email, password);
         if (!validation.isValid) {
             return res.status(400).json({
@@ -101,28 +83,17 @@ exports.login = async (req, res, next) => {
             });
         }
 
-        // Find user and include password field
         const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
-
         if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid email or password'
-            });
+            return res.status(401).json({ success: false, message: 'Invalid email or password' });
         }
 
-        // Check password
         const isPasswordMatch = await user.matchPassword(password);
         if (!isPasswordMatch) {
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid email or password'
-            });
+            return res.status(401).json({ success: false, message: 'Invalid email or password' });
         }
 
-        // Send token response
         sendTokenResponse(user, 200, res);
-
     } catch (error) {
         next(error);
     }
@@ -133,14 +104,9 @@ exports.login = async (req, res, next) => {
 exports.getCurrentUser = async (req, res, next) => {
     try {
         const user = await User.findById(req.user.id);
-
         if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: 'User not found'
-            });
+            return res.status(404).json({ success: false, message: 'User not found' });
         }
-
         res.status(200).json({
             success: true,
             user: {
@@ -148,10 +114,73 @@ exports.getCurrentUser = async (req, res, next) => {
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                headline: user.headline,
+                location: user.location,
+                bio: user.bio,
+                phone: user.phone,
+                linkedin: user.linkedin,
+                github: user.github,
+                skills: user.skills,
+                resume: user.resume,
                 createdAt: user.createdAt
             }
         });
+    } catch (error) {
+        next(error);
+    }
+};
 
+// ==================== UPDATE PROFILE ====================
+
+exports.updateProfile = async (req, res, next) => {
+    try {
+        const allowedFields = ['headline', 'location', 'bio', 'phone', 'linkedin', 'github', 'skills'];
+        const updates = {};
+        allowedFields.forEach(field => {
+            if (req.body[field] !== undefined) updates[field] = req.body[field];
+        });
+
+        const user = await User.findByIdAndUpdate(req.user.id, updates, { new: true, runValidators: true });
+        res.json({ success: true, user });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// ==================== UPLOAD RESUME ====================
+
+exports.uploadResume = async (req, res, next) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'No file uploaded' });
+        }
+
+        // Extract text from the uploaded file for AI analysis
+        const resumeText = await extractTextFromFile(req.file.path, req.file.mimetype);
+
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user.id,
+            {
+                resume: {
+                    filename: req.file.filename,
+                    originalName: req.file.originalname,
+                    text: resumeText,
+                    uploadedAt: new Date()
+                }
+            },
+            { new: true }
+        );
+
+        res.json({
+            success: true,
+            message: 'Resume uploaded successfully',
+            resume: {
+                filename: updatedUser.resume.filename,
+                originalName: updatedUser.resume.originalName,
+                uploadedAt: updatedUser.resume.uploadedAt,
+                url: `/uploads/resumes/${req.file.filename}`
+            }
+        });
     } catch (error) {
         next(error);
     }

@@ -1,8 +1,3 @@
-/**
- * User Model
- * Defines the schema for users (candidates, recruiters, admins)
- */
-
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
@@ -28,7 +23,7 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: [true, 'Please provide a password'],
             minlength: [6, 'Password must be at least 6 characters'],
-            select: false // Don't return password by default
+            select: false
         },
         role: {
             type: String,
@@ -41,20 +36,28 @@ const userSchema = new mongoose.Schema(
         isVerified: {
             type: Boolean,
             default: false
-        }
+        },
+        // Extended candidate profile
+        resume: {
+            filename: { type: String, default: '' },
+            originalName: { type: String, default: '' },
+            text: { type: String, default: '' },         // Extracted text for AI
+            uploadedAt: { type: Date }
+        },
+        skills: [{ type: String }],
+        headline: { type: String, default: '' },         // e.g. "Senior React Developer"
+        location: { type: String, default: '' },
+        bio: { type: String, default: '' },
+        phone: { type: String, default: '' },
+        linkedin: { type: String, default: '' },
+        github: { type: String, default: '' },
     },
     { timestamps: true }
 );
 
-// ==================== MIDDLEWARE ====================
-
 // Hash password before saving
 userSchema.pre('save', async function (next) {
-    // Only hash if password is new or modified
-    if (!this.isModified('password')) {
-        return next();
-    }
-
+    if (!this.isModified('password')) return next();
     try {
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);
@@ -63,14 +66,11 @@ userSchema.pre('save', async function (next) {
     }
 });
 
-// ==================== METHODS ====================
-
-// Method to compare passwords
+// Compare passwords
 userSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// Create index on email for faster queries
 userSchema.index({ email: 1 });
 
 module.exports = mongoose.model('User', userSchema);

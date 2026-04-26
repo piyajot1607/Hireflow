@@ -1,13 +1,14 @@
 // ==================== CANDIDATE-SPECIFIC FUNCTIONALITY ====================
 
 // API base URL
-const API_BASE = 'http://localhost:5000';
+const CANDIDATE_API_BASE = 'http://localhost:5000';
 
 // Store fetched jobs from API
 let allJobs = [];
 
 // Mock applications data (let so we can reassign from storage)
 let mockApplications = [];
+let pendingApplicationJob = null;
 
 // Initialize candidate page
 document.addEventListener('DOMContentLoaded', function () {
@@ -16,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setupApplicationFilters();
     setupProfileForms();
     setupApplicationModals();
+    setupApplyJobModal();
     loadMyApplicationsFromAPI(); // Load real applications from API
 });
 
@@ -33,7 +35,7 @@ async function loadJobListings(filters = {}) {
         if (filters.types?.length) params.append('type', filters.types[0]);
         if (filters.levels?.length) params.append('level', filters.levels[0]);
         
-        const res = await fetch(`${API_BASE}/api/jobs?${params}`);
+        const res = await fetch(`${CANDIDATE_API_BASE}/api/jobs?${params}`);
         const data = await res.json();
         
         if (!data.success || !data.jobs || data.jobs.length === 0) {
@@ -207,39 +209,73 @@ function attachJobButtonListeners() {
 }
 
 async function applyForJob(job) {
-    const confirmed = confirm(`Apply for: ${job.title} at ${job.company}?\n\nYour profile and resume will be sent to the company.`);
-    if (!confirmed) return;
-
     const token = localStorage.getItem('hireflow_auth_token');
-    const jobId = job._id;
+    if (!token) {
+        showNotification('Please log in to apply for jobs', 'warning');
+        return;
+    }
 
-    // Call the API with proper job ID
-    if (token && jobId) {
+    pendingApplicationJob = job;
+    document.getElementById('applyJobTitle').textContent = job.title || 'Selected Job';
+    document.getElementById('applyJobCompany').textContent = `${job.company || 'Company'} • ${job.location || 'Location'}`;
+    document.getElementById('coverLetterInput').value = '';
+    document.getElementById('applyResumeUpload').value = '';
+    document.getElementById('applyJobError').className = 'alert alert-danger d-none mt-3 mb-0';
+    document.getElementById('applyJobError').textContent = '';
+
+    const modal = new bootstrap.Modal(document.getElementById('applyJobModal'));
+    modal.show();
+}
+
+function setupApplyJobModal() {
+    const form = document.getElementById('applyJobForm');
+    if (!form) return;
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        if (!pendingApplicationJob?._id) return;
+
+        const submitBtn = document.getElementById('submitApplicationBtn');
+        const errorBox = document.getElementById('applyJobError');
+        const coverLetter = document.getElementById('coverLetterInput').value.trim();
+        const resumeFile = document.getElementById('applyResumeUpload').files[0];
+        const token = localStorage.getItem('hireflow_auth_token');
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+        errorBox.className = 'alert alert-danger d-none mt-3 mb-0';
+
         try {
-            const res = await fetch(`${API_BASE}/api/applications/job/${jobId}`, {
+            const formData = new FormData();
+            formData.append('coverLetter', coverLetter);
+            if (resumeFile) formData.append('resume', resumeFile);
+
+            const res = await fetch(`${CANDIDATE_API_BASE}/api/applications/job/${pendingApplicationJob._id}`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ coverLetter: '' })
+                headers: { Authorization: `Bearer ${token}` },
+                body: formData
             });
+
             const data = await res.json();
-            if (data.success) {
-                alert(`Successfully applied to ${job.title}!\n\nThe company will review your application and contact you soon.`);
-                loadMyApplicationsFromAPI();
-                return;
-            } else {
-                alert(data.message || 'Application failed');
+            if (!data.success) {
+                errorBox.className = 'alert alert-danger mt-3 mb-0';
+                errorBox.textContent = data.message || 'Failed to submit application.';
                 return;
             }
+
+            bootstrap.Modal.getInstance(document.getElementById('applyJobModal'))?.hide();
+            showNotification(`Application submitted for ${pendingApplicationJob.title}`, 'success');
+            pendingApplicationJob = null;
+            await loadMyApplicationsFromAPI();
         } catch (err) {
-            console.error('Application failed:', err);
-            alert('Failed to submit application. Please try again.');
+            errorBox.className = 'alert alert-danger mt-3 mb-0';
+            errorBox.textContent = 'Network error. Please try again.';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Submit Application';
         }
-    } else {
-        alert('Please log in to apply for jobs');
-    }
+    });
 }
 
 // Load real applications from API (if authenticated)
@@ -252,7 +288,7 @@ async function loadMyApplicationsFromAPI() {
         return;
     }
     try {
-        const res = await fetch(`${API_BASE}/api/applications/my`, {
+        const res = await fetch(`${CANDIDATE_API_BASE}/api/applications/my`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
@@ -354,20 +390,47 @@ function getStatusBadge(status) {
 
 function attachApplicationListeners() {
     document.querySelectorAll('.withdraw-app').forEach(btn => {
-        btn.addEventListener('click', function (e) {
+        btn.addEventListener('click', async function (e) {
             e.preventDefault();
-            const appId = parseInt(this.dataset.appId);
-            const app = mockApplications.find(a => a.id === appId);
+            const appId = this.dataset.appId;
+            const app = mockApplications.find(a => String(a.id) === String(appId));
             
-            if (app && ['Under Review', 'Interview Scheduled'].includes(app.status)) {
-                if (confirm(`Withdraw application for ${app.jobTitle}?`)) {
-                    mockApplications = mockApplications.filter(a => a.id !== appId);
-                    saveApplicationsToStorage();
-                    filterApplications('all');
-                    alert('Application withdrawn successfully');
+            if (!app) return;
+
+            if (!['Applied', 'Under Review', 'Shortlisted'].includes(app.status)) {
+                showNotification('This application cannot be withdrawn at its current status', 'warning');
+                return;
+            }
+
+            if (!confirm(`Withdraw application for ${app.jobTitle}?`)) {
+                return;
+            }
+
+            if (app._apiId) {
+                try {
+                    const token = localStorage.getItem('hireflow_auth_token');
+                    const res = await fetch(`${CANDIDATE_API_BASE}/api/applications/${app._apiId}/withdraw`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const data = await res.json();
+                    if (!data.success) {
+                        showNotification(data.message || 'Could not withdraw application', 'warning');
+                        return;
+                    }
+                } catch (err) {
+                    showNotification('Failed to withdraw application. Try again.', 'warning');
+                    return;
                 }
+                await loadMyApplicationsFromAPI();
             } else {
-                alert('Cannot withdraw applications with this status');
+                mockApplications = mockApplications.filter(a => String(a.id) !== String(appId));
+                saveApplicationsToStorage();
+                filterApplications('all');
+                showNotification('Application withdrawn successfully', 'success');
             }
         });
     });
@@ -375,9 +438,11 @@ function attachApplicationListeners() {
 
 function setupApplicationModals() {
     const appModal = document.getElementById('appModal');
+    if (!appModal) return;
+
     appModal.addEventListener('show.bs.modal', function (e) {
-        const appId = parseInt(e.relatedTarget.dataset.appId);
-        const app = mockApplications.find(a => a.id === appId);
+        const appId = e.relatedTarget.dataset.appId;
+        const app = mockApplications.find(a => String(a.id) === String(appId));
         
         if (app) {
             const modalBody = document.getElementById('appModalBody');
@@ -475,16 +540,41 @@ function setupProfileForms() {
     // Resume upload
     const uploadResumeBtn = document.getElementById('uploadResumeBtn');
     if (uploadResumeBtn) {
-        uploadResumeBtn.addEventListener('click', function () {
+        uploadResumeBtn.addEventListener('click', async function () {
             const fileInput = document.getElementById('resumeUpload');
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
-                const fileName = file.name;
-                document.getElementById('resumeFile').textContent = fileName;
-                localStorage.setItem('hireflow_resumeName', fileName);
-                showNotification('Resume uploaded successfully!', 'success');
+                const uploaded = await uploadResumeToAPI(file);
+                if (uploaded) {
+                    document.getElementById('resumeFile').textContent = uploaded.originalName || file.name;
+                    localStorage.setItem('hireflow_resumeName', uploaded.originalName || file.name);
+                    fileInput.value = '';
+                }
             } else {
                 showNotification('Please select a file first', 'warning');
+            }
+        });
+    }
+
+    const quickUploadBtn = document.getElementById('quickUploadResumeBtn');
+    if (quickUploadBtn) {
+        quickUploadBtn.addEventListener('click', function () {
+            const resumeInput = document.getElementById('resumeUpload');
+            if (!resumeInput) return;
+            navigateToProfileSection();
+            resumeInput.click();
+        });
+    }
+
+    const resumeInputEl = document.getElementById('resumeUpload');
+    if (resumeInputEl) {
+        resumeInputEl.addEventListener('change', async function () {
+            if (!this.files.length) return;
+            const uploaded = await uploadResumeToAPI(this.files[0]);
+            if (uploaded) {
+                document.getElementById('resumeFile').textContent = uploaded.originalName || this.files[0].name;
+                localStorage.setItem('hireflow_resumeName', uploaded.originalName || this.files[0].name);
+                this.value = '';
             }
         });
     }
@@ -642,6 +732,50 @@ function showNotification(message, type = 'info') {
     setTimeout(() => {
         alert.remove();
     }, 3000);
+}
+
+async function uploadResumeToAPI(file) {
+    try {
+        const token = localStorage.getItem('hireflow_auth_token');
+        if (!token) {
+            showNotification('Please log in to upload resume', 'warning');
+            return null;
+        }
+
+        const formData = new FormData();
+        formData.append('resume', file);
+
+        const res = await fetch(`${CANDIDATE_API_BASE}/api/auth/upload-resume`, {
+            method: 'PUT',
+            headers: { Authorization: `Bearer ${token}` },
+            body: formData
+        });
+
+        const data = await res.json();
+        if (!data.success) {
+            showNotification(data.message || 'Resume upload failed', 'warning');
+            return null;
+        }
+
+        showNotification('Resume uploaded successfully!', 'success');
+        return data.resume;
+    } catch (err) {
+        showNotification('Failed to upload resume. Please try again.', 'warning');
+        return null;
+    }
+}
+
+function navigateToProfileSection() {
+    document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+    document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+
+    const profileLink = document.querySelector('.sidebar .nav-link[data-page="profile"]');
+    const profileSection = document.getElementById('profile');
+    const titleEl = document.getElementById('pageTitle');
+
+    if (profileLink) profileLink.classList.add('active');
+    if (profileSection) profileSection.classList.add('active');
+    if (titleEl) titleEl.textContent = 'My Profile';
 }
 
 function saveApplicationsToStorage() {

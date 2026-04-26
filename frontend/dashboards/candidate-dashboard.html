@@ -134,7 +134,7 @@
                             <h1>Welcome, <span id="userNameDisplay">User</span></h1>
                             <p class="text-muted">Here's your job search overview</p>
                         </div>
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary" id="quickUploadResumeBtn">
                             <i class="fas fa-upload"></i> Upload Resume
                         </button>
                     </div>
@@ -746,6 +746,49 @@
     </div>
 
     <!-- Application Detail Modal -->
+    <div class="modal fade" id="applyJobModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-paper-plane me-2"></i>Apply to Job</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="applyJobForm">
+                    <div class="modal-body">
+                        <div class="p-3 bg-light rounded mb-3">
+                            <h6 class="mb-1" id="applyJobTitle">Selected Job</h6>
+                            <small class="text-muted" id="applyJobCompany">Company</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="coverLetterInput" class="form-label">Cover Letter</label>
+                            <textarea
+                                id="coverLetterInput"
+                                class="form-control"
+                                rows="6"
+                                placeholder="Write a short cover letter introducing your experience and why you're a good fit..."
+                            ></textarea>
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="applyResumeUpload" class="form-label">Attach Resume (Optional)</label>
+                            <input type="file" class="form-control" id="applyResumeUpload" accept=".pdf,.doc,.docx">
+                            <small class="text-muted">If empty, your latest uploaded profile resume will be used.</small>
+                        </div>
+
+                        <div id="applyJobError" class="alert alert-danger d-none mt-3 mb-0"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="submitApplicationBtn">
+                            <i class="fas fa-check"></i> Submit Application
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="appModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
